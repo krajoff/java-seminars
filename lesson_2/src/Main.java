@@ -3,6 +3,7 @@ import netscape.javascript.JSObject;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,6 +16,8 @@ public class Main {
                 "{\"фамилия\":\"Краснов\",\"оценка\":\"5\",\"предмет\":\"Физика\"}}";
         StringBuilder stringBuilder = ex0(strJSON);
         ex1(stringBuilder, "output.txt");
+        int [] array = {11, 3, 14, 16, 7};
+        ex2(array, "bubble.txt");
     }
 
     /*
@@ -59,5 +62,29 @@ public class Main {
             logger.log(Level.WARNING, e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    // Реализуйте алгоритм сортировки пузырьком числового массива, результат после каждой итерации запишите в лог-файл.
+    static void ex2(int[] array, String filePath){
+        boolean isSorted = false;
+        int buf;
+        while(!isSorted) {
+            isSorted = true;
+            for (int i = 0; i < array.length-1; i++) {
+                if(array[i] > array[i+1]){
+                    isSorted = false;
+                    buf = array[i];
+                    array[i] = array[i+1];
+                    array[i+1] = buf;
+                    try (FileWriter fileWriter = new FileWriter(filePath, true)) {
+                        fileWriter.write(Arrays.toString(array));
+                        fileWriter.write("\n");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        System.out.println(Arrays.toString(array));
     }
 }
