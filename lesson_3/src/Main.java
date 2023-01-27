@@ -7,7 +7,6 @@ public class Main {
         ex0(10);
 
 
-
         ex1();
     }
 
@@ -15,14 +14,11 @@ public class Main {
     static void ex0(int number) {
         List<Integer> list = new ArrayList();
         for (int i = 0; i < number; i++) {
-            list.add(i, (int)(Math.random() * 10));
+            list.add(i, (int) (Math.random() * 10));
         }
         System.out.println("Исходный массив: " + list);
-        for (int i = 0; i < number; i++) {
-
-            list.add(i, (int)(Math.random() * 10));
-        }
-
+        list.removeIf(x -> x % 2 == 0);
+        System.out.println("Новый массив: " + list);
     }
 
     // Задан целочисленный список ArrayList. Найти минимальное, максимальное и
