@@ -4,9 +4,6 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         ex0();
-        ex1();
-        ex2();
-        ex3();
     }
 
     // Вычислить n-ое треугольного число (сумма чисел от 1 до n)

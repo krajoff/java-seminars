@@ -4,7 +4,7 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) {
         ex0(10);
-        ex1(3);
+        ex1(10);
     }
 
     // Пусть дан произвольный список целых чисел, удалить из него четные числа
@@ -29,11 +29,10 @@ public class Main {
             list.add(random.nextInt(10));
             sum += list.get(i);
         }
-        double average = (double)sum/number;
+        float average = (float)sum/number;
         System.out.println("Array: " + list);
         System.out.println("Maximum of array: " + Collections.max(list));
         System.out.println("Minimum of array: " + Collections.min(list));
-        System.out.println("Average of array: " + average);
-
+        System.out.printf("Average of array: %.2f", average);
     }
 }
