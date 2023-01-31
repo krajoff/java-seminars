@@ -1,6 +1,5 @@
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -10,13 +9,14 @@ public class Main {
 
     // Пусть дан произвольный список целых чисел, удалить из него четные числа
     static void ex0(int number) {
+        Random random = new Random();
         List<Integer> list = new ArrayList();
         for (int i = 0; i < number; i++) {
-            list.add(i, (int) (Math.random() * 10));
+            list.add(random.nextInt(10));
         }
-        System.out.println("Исходный массив: " + list);
+        System.out.println("Initial array: " + list);
         list.removeIf(x -> x % 2 == 0);
-        System.out.println("Новый массив: " + list);
+        System.out.println("New array: " + list);
     }
 
     // Задан целочисленный список ArrayList. Найти минимальное, максимальное и
@@ -26,5 +26,17 @@ public class Main {
         for (int i = 0; i < number; i++) {
             list.add(i, (int) (Math.random() * 10));
         }
+        Random random = new Random();
+        List<Integer> list = new ArrayList();
+        int sum = 0;
+        for (int i = 0; i < number; i++) {
+            list.add(random.nextInt(10));
+            sum += list.get(i);
+        }
+        float average = (float)sum/number;
+        System.out.println("Array: " + list);
+        System.out.println("Maximum of array: " + Collections.max(list));
+        System.out.println("Minimum of array: " + Collections.min(list));
+        System.out.printf("Average of array: %.2f", average);
     }
 }
