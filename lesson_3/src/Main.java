@@ -22,6 +22,10 @@ public class Main {
     // Задан целочисленный список ArrayList. Найти минимальное, максимальное и
     // среднее арифметическое из этого списка. Collections.max()
     static void ex1(int number) {
+        List<Integer> list = new ArrayList();
+        for (int i = 0; i < number; i++) {
+            list.add(i, (int) (Math.random() * 10));
+        }
         Random random = new Random();
         List<Integer> list = new ArrayList();
         int sum = 0;
