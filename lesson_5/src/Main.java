@@ -1,5 +1,4 @@
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -11,23 +10,28 @@ public class Main {
     Реализуйте структуру телефонной книги с помощью HashMap, учитывая, что 1 человек может иметь несколько телефонов.
      */
     static void ex0() {
-//        PhoneBook phoneBook = new PhoneBook();
-//        phoneBook.put("Николай", "+7-921-311-56-16");
-//        phoneBook.put("Елена", "+7-921-098-10-13");
-//        phoneBook.put("Алена", "+7-922-222-55-16");
-//        phoneBook.put("Павел", "+7-902-222-52-00");
-//        phoneBook.put("Илья", "+7-912-951-67-98");
-        Map<String, String> map = new HashMap<>();
-        map.put("Николай", "+7-921-311-56-16, +7-812-311-56-66");
-        map.put("Елена", "+7-921-098-10-13");
-        map.put("Алена", "+7-922-222-55-16");
-        map.put("Павел", "+7-902-222-52-00");
-        map.put("Илья", "+7-912-951-67-98");
-        for (Map.Entry entry : map.entrySet()) {
-            if (entry.getValue().equals("+7-921-098-10-13")) {
-                System.out.println(entry);
-            }
+        Map<String, List<String>> map = new HashMap<>();
+        map.put("Николай", Arrays.asList("+7-921-311-56-16", "+7-812-311-56-66"));
+        map.put("Елена", List.of("+7-921-098-10-13"));
+        map.put("Алена", List.of("+7-922-222-55-16"));
+        map.put("Павел", List.of("+7-902-222-52-00"));
+        map.put("Илья", List.of("+7-912-951-67-98"));
+        System.out.print("Введите имя: ");
+        Scanner scanner = new Scanner(System.in);
+        String name = scanner.nextLine();
+        System.out.print("Введите телефон: ");
+        String phone = scanner.nextLine();
+        if (map.containsKey(name)) {
+            List<String> list = new ArrayList<>(map.get(name));
+            list.add(phone);
+            map.put(name, list);
+        } else {
+            map.put(name, List.of(phone));
         }
+        for (Map.Entry entry : map.entrySet()) {
+            System.out.println(entry);
+        }
+
     }
 
     /*
@@ -38,7 +42,8 @@ public class Main {
     Для сортировки использовать TreeMap.
     */
     static void ex1() {
-
+//        TreeMap<List<Integer>, List<String>> treeMap = new TreeMap<>();
+//        for (int i = 0; i)
     }
 
     /*
