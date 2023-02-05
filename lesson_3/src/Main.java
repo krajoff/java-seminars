@@ -5,7 +5,10 @@ public class Main {
     public static void main(String[] args) {
         ex0(10);
         ex1(10);
+<<<<<<< HEAD
+=======
         ex2(2);
+>>>>>>> 3d0c0ab8902a970c98525633ab01a6767a904641
     }
 
     // Пусть дан произвольный список целых чисел, удалить из него четные числа
@@ -23,6 +26,12 @@ public class Main {
     // Задан целочисленный список ArrayList. Найти минимальное, максимальное и
     // среднее арифметическое из этого списка. Collections.max()
     static void ex1(int number) {
+<<<<<<< HEAD
+        List<Integer> list = new ArrayList();
+        for (int i = 0; i < number; i++) {
+            list.add(i, (int) (Math.random() * 10));
+        }
+=======
         Random random = new Random();
         List<Integer> list = new ArrayList();
         int sum = 0;
@@ -50,6 +59,7 @@ public class Main {
         //for (int i = 0; i < number; i++)
         System.out.println("Sorted array: " + mergeArrays(list,list));
 
+>>>>>>> 3d0c0ab8902a970c98525633ab01a6767a904641
     }
 
     static List<Integer> mergeArrays(List<Integer> array1, List<Integer> array2) {
