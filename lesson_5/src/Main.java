@@ -2,8 +2,11 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        ex0();
-        ex1();
+//        ex0();
+        String list = "Иван Иванов, Светлана Петрова, Кристина Белова, Анна Мусина, Анна Крутова," +
+                " Иван Юрин, Петр Лыков, Павел Чернов, Петр Чернышов, Мария Федорова, Марина Светлова, Мария Савина," +
+                " Мария Рыкова, Марина Лугова, Анна Владимирова, Иван Мечников, Петр Петин, Иван Ежов";
+        System.out.println(ex1(list));
     }
 
     /*
@@ -41,9 +44,21 @@ public class Main {
     которая найдет и выведет повторяющиеся имена с количеством повторений. Отсортировать по убыванию популярности.
     Для сортировки использовать TreeMap.
     */
-    static void ex1() {
-//        TreeMap<List<Integer>, List<String>> treeMap = new TreeMap<>();
-//        for (int i = 0; i)
+    static Map<String, Integer> ex1(String list) {
+        String[] coworkers = list.split(", ");
+        Map<String, Integer> treeMap = new TreeMap<>();
+        ArrayList<String> names = new ArrayList<String>();
+        for (String worker : coworkers) {
+            String name = worker.split(" ")[0];
+            if (treeMap.containsKey(name)) {
+                int cnt = treeMap.get(name);
+                cnt++;
+                treeMap.put(name, cnt);
+            } else {
+                treeMap.put(name, 1);
+            }
+        }
+        return treeMap;
     }
 
     /*
@@ -52,7 +67,6 @@ public class Main {
     static void ex2() {
 
     }
-
     /*
     На шахматной доске расставить 8 ферзей так, чтобы они не били друг друга.
      */
