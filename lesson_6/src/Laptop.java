@@ -13,7 +13,7 @@ public class Laptop {
     }
 
     public String toString() {
-        return String.format("%s %s: %.1f\", %dМб ОЗУ, диск %dГб, цвет %s, %s." +
+        return String.format("%s %s: %.1f\", %dГб ОЗУ, диск %dГб, цвет %s, %s" +
                 "", company, model, displaySize, memoryPrimary, memoryHDD, color, systemName);
     }
 }
