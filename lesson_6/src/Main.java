@@ -13,10 +13,13 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        int number = 2;
-        Set laptopsSet = laptops(number);
+        int laptopNumbers = 2;
+        Set laptopsSet = laptops(laptopNumbers);
         System.out.println(laptopsSet);
-        firstInput();
+        Map<Integer, String> criteriaMap = new HashMap<>();
+        criteriaMap(criteriaMap);
+        filteredLaptops(criteriaMap, laptopsSet);
+        System.out.println(criteriaMap);
     }
 
     static Set laptops(int number) {
@@ -41,21 +44,48 @@ public class Main {
         return laptops;
     }
 
-    static void firstInput() {
-        System.out.println("Введите критерий фильтрации: 1 - ОЗУ, 2 - Объем ЖД, 3 - Операционная система, 4 - Цвет: ");
+    static Map<Integer, String> criteriaMap(Map<Integer, String> criteriaMap) {
+        Map<Integer, String> greeting = new HashMap<>();
+        greeting.put(1, "Введите минимальный объем ОЗУ [Гб]: ");
+        greeting.put(2, "Введите минимальный объем диска [Гб]: ");
+        greeting.put(3, "Введите операционную систему: ");
+        greeting.put(4, "Введите необходимый цвет ноубука: ");
+        System.out.print("Введите критерий фильтрации: 1 - ОЗУ, 2 - Объем ЖД, 3 - Операционная система, 4 - Цвет: ");
         Scanner scanner = new Scanner(System.in);
-        int criteria = scanner.nextInt();
-        Map<Integer, List<String>> filter = new HashMap<>();
-        filter.put(1, List.of("Введите минимальный объем необходимой памяти: ", ""));
-        filter.put(2, List.of("Введите минимальный объем диска: ", ""));
-        filter.put(3, List.of("Введите операционную систему: ", ""));
-        filter.put(4, List.of("Введите необходимый цвет ноубука: ", ""));
-        if (criteria < 5 && criteria > 0) {
-            System.out.println(filter.get(criteria).get(0));
+        int criterion = scanner.nextInt();
+        if (criterion < 5 && criterion > 0) {
+            System.out.print(greeting.get(criterion));
+            scanner.nextLine();
+            criteriaMap.put(criterion, scanner.nextLine());
+            System.out.print("Добавляем критерии фильтрации да/yes или нет/no? ");
+            String answer = scanner.nextLine();
+            if (answer.equals("yes") || answer.equals("да")) {
+                criteriaMap(criteriaMap);
+            }
         } else {
             System.out.println("Недопустимый номер критерия");
         }
+        return criteriaMap;
+    }
 
+    static Set filteredLaptops(Map<Integer, String> criteriaMap, Set laptopsSet) {
+        Set filteredLaptops = new HashSet<>();
+        Iterator<Laptop> iterator = laptopsSet.iterator();
+        while (iterator.hasNext()) {
+            Laptop current = iterator.next();
+            for (Map.Entry<Integer, String> entry : criteriaMap.entrySet()) {
+                switch (entry.getKey()){
+                    case 1:
+                        if(current.memoryPrimary > Integer.parseInt(entry.getValue()))
+                        break;
+                }
+                if (entry.getKey() < 2) {
 
+                }
+                System.out.println();
+
+            }
+        }
+        return filteredLaptops;
     }
 }
