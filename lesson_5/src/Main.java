@@ -63,6 +63,7 @@ public class Main {
             Integer o1Value = treeMap.get(o1);
             Integer o2Value = treeMap.get(o2);
             return o1Value.compareTo(o2Value);
+
         });
 
         //Второй вариант

@@ -65,4 +65,5 @@ public class Car {
         final Car other = (Car) o;
         return this.model == other.model && this.year == other.year && this.power == other.power;
     }
+
 }
