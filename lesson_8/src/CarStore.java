@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 public class CarStore {
 
@@ -30,12 +31,27 @@ public class CarStore {
         if (capacity > catalog.size()) {
             catalog.add(car);
         } else {
-            System.out.println("Sorry, the catalog is full");
+            System.out.println("Извините, но магазин не может вместить ещё один автомобиль");
         }
+    }
+
+    public void remove(Car car) {
+        ListIterator<Car> iterator = catalog.listIterator();
+        while (iterator.hasNext()) {
+            if (iterator.next().equals(car)) {
+                iterator.remove();
+                System.out.println("Удаление выполенено");
+            }
+        }
+  //      throw new Exception("Извините, но нет автомобилей для удаления");
     }
 
     public List<Car> getCatalog() {
         return catalog;
+    }
+
+    public int getNumberCars() {
+        return catalog.size();
     }
 
     public int getCapacity() {
