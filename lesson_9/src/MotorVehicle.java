@@ -4,10 +4,13 @@ public class MotorVehicle extends Transport {
     MotorVehicle(String fuel, int capacity, int power, int maxSpeed, String sign) {
         super(fuel, capacity, power, maxSpeed);
         this.sign = sign;
+        this.setType("Механическое ТС");
     }
 
     MotorVehicle() {
         super();
+        this.sign = null;
+        this.setType("Механическое ТС");
     }
 
     public String getSign() {

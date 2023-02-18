@@ -2,26 +2,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Transport {
+    private String type;
     private String fuel;
     private int capacity;
     private int power;
     private int maxSpeed;
     private int id;
     static int cnt;
-
+    enum State {
+        On, Off
+    }
+    private State state;
     List<Person> personList = new ArrayList<>();
     Transport(String fuel, int capacity, int power, int maxSpeed) {
+        this.type = "Транспорт";
         this.fuel = fuel;
         this.capacity = capacity;
         this.power = power;
         this.maxSpeed = maxSpeed;
         this.id = cnt;
-        cnt++;
-    }
-
-    Transport(String fuel) {
-        this(fuel, 0, 0, 0);
-        this.id = cnt;
+        this.state = State.Off;
         cnt++;
     }
 
@@ -37,6 +37,32 @@ public class Transport {
         } else {
             System.out.println("Извините, но в транспорте нет мест");
         }
+    }
+
+    public void power() {
+        if (this.state == State.Off) {
+            this.state = State.On;
+            System.out.println(this.type + " заведен(о)");
+        } else {
+            this.state = State.Off;
+            System.out.println(this.type + " заглушен(о)");
+        }
+    }
+
+    public void getState() {
+        if (this.state == State.On) {
+            System.out.println("Заведён");
+        } else {
+            System.out.println("Заглушен");
+        }
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getFuel() {

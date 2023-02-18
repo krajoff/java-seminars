@@ -4,7 +4,7 @@ public class Main {
 //    Транспорт - > Автомобиль - > Легковой
 //    Используем наследование, инкапсуляцию
     static public void main (String[] args){
-        Transport tr = new Transport("oil");
+        Transport tr = new Transport();
         System.out.println(tr);
         PassengerCar car = new PassengerCar();
         car.setCapacity(2);
@@ -12,6 +12,8 @@ public class Main {
         car.add(new Person("Mike", "Samuil"));
         car.add(new Person("Nike", "Samuil"));
         car.toString();
+        car.power();
+        car.power();
         System.out.println(car);
         MotorVehicle vehicle = new MotorVehicle("disel", 4, 120, 240, "u655px");
         System.out.println(vehicle);

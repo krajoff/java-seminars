@@ -4,6 +4,7 @@ public class PassengerCar extends MotorVehicle {
     PassengerCar(String fuel, int capacity, int power, int maxSpeed, String sign, String wheel) {
         super(fuel, capacity, power, maxSpeed, sign);
         this.wheel = wheel;
+        this.setType("Машина");
     }
 
     PassengerCar() {
