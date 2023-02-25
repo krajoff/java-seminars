@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Main {
 //    Создать иерархию родительский и дочернии классы для Транспорта
 //    Например: Транспорт - > Автомобиль - > Автобус
@@ -19,6 +22,7 @@ public class Main {
         System.out.println(vehicle);
         Bus bus = new Bus();
         System.out.println(bus);
+        List<String> list = new ArrayList<>();
 
     }
 }
