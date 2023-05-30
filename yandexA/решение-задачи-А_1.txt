@@ -8,15 +8,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-
-
-
-
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out));
-        String[] firstdata = reader.readLine().split(" ");
+		String[] firstdata = reader.readLine().split(" ");
         int n10 = Integer.parseInt(firstdata[0]);
         int n50 = Integer.parseInt(firstdata[1]);
         int m = Integer.parseInt(firstdata[2]);
@@ -62,13 +58,13 @@ public class Main {
                     }
                 }
             }
-            if (n10 > 0 || n50 > 0) {
-                writer.write(String.valueOf("-1"));
+			if (n10 > 0 || n50 > 0) {
+				writer.write(String.valueOf("-1"));
             } else {
                 writer.write(String.valueOf(n));
             }
-            reader.close();
-            writer.close();
+			reader.close();
+			writer.close();
         }
     }
 }

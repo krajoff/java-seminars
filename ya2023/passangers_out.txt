@@ -1,0 +1,1 @@
+[..._.#., .##_..., .#._.##, ..._...]Passengers can take seats:  1A 1B

@@ -9,22 +9,19 @@ import java.util.Collections;
 import java.util.List;
 
 
-
-
-
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException  {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out));
-        String[] firstdata = reader.readLine().split(" ");
-        int n10 = Integer.parseInt(firstdata[0]);
-        int n50 = Integer.parseInt(firstdata[1]);
-        int m = Integer.parseInt(firstdata[2]);
+		String[] lines = reader.readLine().split(" ");
+        int n10 = Integer.parseInt(lines[0]);
+        int n50 = Integer.parseInt(lines[1]);
+        int m = Integer.parseInt(lines[2]);
 
-        String[] G = g.split(" ");
-        List<Long> list = new ArrayList<>();
-        long sum = 0;
-        long el;
+		String[] G = reader.readLine().split(" ");
+        List<Integer> list = new ArrayList<>();
+        int sum = 0;
+        int el;
         for (String s : G) {
             el = Integer.parseInt(s);
             list.add(el);
@@ -35,40 +32,40 @@ public class Main {
         } else {
             Collections.sort(list);
             int size = list.size();
-            long temp;
-            long n = 0;
+            int temp;
+            int n = 0;
             double value, fractionalPart, integralPart;
             for (int i = size - 1; i > -1; i--) {
                 if (n50 > 0) {
-                    value = (double) list.get(i) / 50;
+                    value = list.get(i) / 50;
                     fractionalPart = value % 1;
                     integralPart = value - fractionalPart;
                     if (integralPart > 0) {
-                        temp = list.get(i) - (long) integralPart * 50;
+                        temp = list.get(i) - (int) integralPart * 50;
                         list.set(i, temp);
-                        n50 -= (long) integralPart;
+                        n50 -= (int) integralPart;
                         n++;
                     }
                 }
                 if (n10 > 0) {
-                    value = (double) list.get(i) / 10;
+                    value = list.get(i) / 10;
                     fractionalPart = value % 1;
                     integralPart = value - fractionalPart;
                     if (integralPart > 0) {
-                        temp = list.get(i) - (long) integralPart * 10;
+                        temp = list.get(i) - (int) integralPart * 10;
                         list.set(i, temp);
-                        n10 -= (long) integralPart;
+                        n10 -= (int) integralPart;
                         n++;
                     }
                 }
             }
             if (n10 > 0 || n50 > 0) {
-                writer.write(String.valueOf("-1"));
+				writer.write(String.valueOf("-1"));
             } else {
                 writer.write(String.valueOf(n));
             }
-            reader.close();
-            writer.close();
+			reader.close();
+			writer.close();
         }
     }
 }

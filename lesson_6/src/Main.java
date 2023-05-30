@@ -13,7 +13,7 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        int laptopNumbers = 10000;
+        int laptopNumbers = 5;
         Set laptopsSet = laptops(laptopNumbers);
         System.out.println(laptopsSet);
         Map<Integer, String> criteriaMap = new HashMap<>();
@@ -21,7 +21,7 @@ public class Main {
         System.out.println(criteriaMap);
         Set<Laptop> fl = filteredLaptops(criteriaMap, laptopsSet);
         System.out.println(fl);
-        System.out.println();
+        System.out.println("");
         System.out.printf("Найдено %d ноутбуков по текущему критерию", fl.size());
 
     }
@@ -75,37 +75,28 @@ public class Main {
     static Set<Laptop> filteredLaptops(Map<Integer, String> criteriaMap, Set laptopsSet) {
         Set<Laptop> filteredLaptops = new HashSet<>();
         Iterator<Laptop> iterator = laptopsSet.iterator();
-        while (iterator.hasNext()) {
+        while (iterator.hasNext()){
             Laptop current = iterator.next();
-            int cnt = 0;
             for (Map.Entry<Integer, String> entry : criteriaMap.entrySet()) {
-                switch (entry.getKey()) {
-                    case 1:
-                        if (current.memoryPrimary < Integer.parseInt(entry.getValue())) {
-                            cnt++;
-                        }
-                        break;
-                    case 2:
-                        if (current.memoryHDD < Integer.parseInt(entry.getValue())) {
-                            cnt++;
-                        }
-                        break;
-                    case 3:
-                        if (!current.systemName.equals(entry.getValue())) {
-                            cnt++;
-                        }
-                        break;
-                    case 4:
-                        if (!current.color.equals(entry.getValue())) {
-                            cnt++;
-                        }
-                        break;
+                if (entry.getKey() == 1 && current.memoryPrimary < Integer.parseInt(entry.getValue())) {
+                    current = iterator.next();
+                    break;
                 }
-
-            }
-            if (cnt == 0) {
+                if (entry.getKey() == 2 && current.memoryHDD < Integer.parseInt(entry.getValue())) {
+                    current = iterator.next();
+                    break;
+                }
+                if (entry.getKey() == 3 && !current.systemName.equals(entry.getValue())) {
+                    current = iterator.next();
+                    break;
+                }
+                if (entry.getKey() == 4 && !current.color.equals(entry.getValue())) {
+                    current = iterator.next();
+                    break;
+                }
                 filteredLaptops.add(current);
             }
+
         }
         return filteredLaptops;
     }
