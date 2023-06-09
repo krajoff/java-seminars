@@ -11,10 +11,11 @@ public class task7 {
     public static void message() {
         System.out.print("Введите данные: ");
         Scanner scanner = new Scanner(System.in);
-        if (scanner.hasNext()) {
+        if (scanner.hasNextLine()) {
             System.out.println("Всё хорошо!");
         } else {
             System.err.println("Ввод пустых строк запрещен");
         }
+        scanner.close();
     }
 }
