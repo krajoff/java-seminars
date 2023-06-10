@@ -12,9 +12,9 @@ public class Main {
         *System.out.println("Новый массив: " + Arrays.toString(d2a));
         System.out.println(task2.sum2d(new String[][]{{"0", "3"},{"0", "3"},{"1", "3"},{"0", "3"},{"1", "3"}}));
         */
-        //System.out.println(task4.getFloat());
-        //task5.tr(new int[]{1, 2, 3, 4, 5, 6, 7, 8});
-        //new task6();
+        System.out.println(task4.getFloat());
+        task5.tr(new int[]{1, 2, 3, 4, 5, 6, 7, 8});
+        new task6();
         task7.message();
     }
 }
