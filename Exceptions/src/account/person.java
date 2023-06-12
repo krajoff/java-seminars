@@ -1,13 +1,13 @@
 package account;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static java.lang.String.join;
 
 public class person {
     private String name;
@@ -29,12 +29,20 @@ public class person {
         this.sex = sex;
     }
 
-//    public void fileWrite() throws IOException{
-//        try(BufferedReader in = Files.newBufferedReader();
-//            BufferedWriter out = Files.newBufferedWriter()) {
-//            out.write(in.readLine());
-//        }
-//    }
+    public void writeToFile(){
+        String line = String.join("><",
+                surname,
+                name,
+                patronymic,
+                simpleDateFormat.format(birthday),
+                phone,
+                sex);
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(surname, true))) {
+            writer.write("<"+line+">"+"\n");
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public String toString() {
@@ -42,7 +50,7 @@ public class person {
                 "name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", patronymic='" + patronymic + '\'' +
-                ", birthday=" + simpleDateFormat.format(birthday)+
+                ", birthday=" + simpleDateFormat.format(birthday) +
                 ", phone=" + phone +
                 ", sex=" + sex +
                 '}';
