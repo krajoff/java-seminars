@@ -1,13 +1,9 @@
 package account;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import static java.lang.String.join;
 
 public class person {
     private String name;
@@ -29,7 +25,7 @@ public class person {
         this.sex = sex;
     }
 
-    public void writeToFile(){
+    public void writeToFile() {
         String line = String.join("><",
                 surname,
                 name,
@@ -38,8 +34,8 @@ public class person {
                 phone,
                 sex);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(surname, true))) {
-            writer.write("<"+line+">"+"\n");
-        }catch(IOException e){
+            writer.write("<" + line + ">" + "\n");
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

@@ -34,7 +34,8 @@ public class validator {
                     "(right format dd.MM.yyyy): " + date);
         }
     }
-    public static void validPhone(String phone){
+
+    public static void validPhone(String phone) {
         if (!phone.matches("[0-9]+")) {
             throw new RuntimeException("You entered incorrect phone number " +
                     "(it doesn't includes digits only)");
