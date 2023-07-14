@@ -19,18 +19,17 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        int[] turn = new int[2];
         while (true) {
             initialize();
             while (true) {
                 printField();
-                turn = humanTurn();
+                humanTurn();
                 printField();
-                if (gameCheck(DOT_HUMAN, "You win", turn))
+                if (gameCheck(DOT_HUMAN, "You win"))
                     break;
-                turn = aiTurn();
+                aiTurn();
                 printField();
-                if (gameCheck(DOT_AI, "AI win", turn))
+                if (gameCheck(DOT_AI, "AI win"))
                     break;
             }
             System.out.println("One more time (Y)?");
@@ -75,8 +74,8 @@ public class Main {
         System.out.println();
     }
 
-    static boolean gameCheck(char c, String str, int[] turn) {
-        if (checkWin(c, turn)) {
+    static boolean gameCheck(char c, String str) {
+        if (checkWin(c)) {
             System.out.println(str);
             return true;
         }
@@ -89,29 +88,37 @@ public class Main {
 
     /**
      * Проверка победы
-     * TODO: 2 ЗАДАЧА: Переработать метод проверки победы в домашнем задании, необходимо использовать
-     *  вспомогательыне методы и циклы (например for)
      *
      * @param c фишка игрока
      * @return результат проверки
      */
-    static boolean checkWin(char c, int[] turn) {
-//        for (int d = 0; d < 3; d++) {
-//            switch (d) {
-//                case 0:
-//                    while()
-//                    field[turn[1]][turn[2]];
-//            }
-//        }
-//        while ()
-//            for (int i = 0; i < fieldSizeX; i++) {
-//                for (int j = 0; j < fieldSizeY; j++) {
-//
-//                    field[i][j] == c
-//                }
-//            }
+    static boolean checkWin(char c) {
+        for (int i = 0; i < fieldSizeX; i++) {
+            for (int j = 0; j < fieldSizeY; j++) {
+                boolean tfx = true;
+                boolean tfy = true;
+                boolean tfdr = true;
+                boolean tfdl = true;
+                for (int k = 0; k < WIN_COUNT; k++) {
+                    if (i < fieldSizeX - WIN_COUNT) {
+                        tfx = tfx && field[i + k][j] == c;
+                    }
+                    if (j < fieldSizeY - WIN_COUNT) {
+                        tfy = tfy && field[i][j + k] == c;
+                    }
+                    if (j < fieldSizeY - WIN_COUNT &&
+                            i < fieldSizeX - WIN_COUNT) {
+                        tfdr = tfdr && field[i + k][j + k] == c;
+                    }
 
-
+                    if (i < fieldSizeX - WIN_COUNT && j > WIN_COUNT) {
+                        tfdl = tfdl && field[i - k][j - k] == c;
+                    }
+                }
+            if (tfx || tfy || tfdr || tfdl == true)
+                return true;
+            }
+        }
         return false;
     }
 
@@ -129,9 +136,8 @@ public class Main {
     }
 
 
-    private static int[] humanTurn() {
+    private static void humanTurn() {
         int x, y;
-        int[] turn = new int[2];
         do {
             System.out.print("Input X & Y with whitespace: ");
             x = getScanner().nextInt() - 1;
@@ -139,24 +145,17 @@ public class Main {
         }
         while (!isCellValid(x, y) || !isCellEmpty(x, y));
         field[x][y] = DOT_HUMAN;
-        turn[0] = x;
-        turn[1] = y;
-        return turn;
     }
 
 
-    private static int[] aiTurn() {
+    private static void aiTurn() {
         int x, y;
-        int[] turn = new int[2];
         do {
             x = random.nextInt(fieldSizeX);
             y = random.nextInt(fieldSizeY);
         }
         while (!isCellEmpty(x, y));
         field[x][y] = DOT_AI;
-        turn[0] = x;
-        turn[1] = y;
-        return turn;
     }
 
     private static boolean isCellEmpty(int x, int y) {
