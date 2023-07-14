@@ -111,7 +111,7 @@ public class Main {
                         tfdr = tfdr && field[i + k][j + k] == c;
                     }
 
-                    if (i < fieldSizeX - WIN_COUNT && j > WIN_COUNT) {
+                    if (i < fieldSizeX - WIN_COUNT && j >= WIN_COUNT-1) {
                         tfdl = tfdl && field[i - k][j - k] == c;
                     }
                 }
