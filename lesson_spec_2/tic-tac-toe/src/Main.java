@@ -96,20 +96,20 @@ public class Main {
      * @return результат проверки
      */
     static boolean checkWin(char c, int[] turn) {
-        for (int d = 0; d < 3; d++) {
-            switch (d) {
-                case 0:
-                    while()
-                    field[turn[1]][turn[2]];
-            }
-        }
-        while ()
-            for (int i = 0; i < fieldSizeX; i++) {
-                for (int j = 0; j < fieldSizeY; j++) {
-
-                    field[i][j] == c
-                }
-            }
+//        for (int d = 0; d < 3; d++) {
+//            switch (d) {
+//                case 0:
+//                    while()
+//                    field[turn[1]][turn[2]];
+//            }
+//        }
+//        while ()
+//            for (int i = 0; i < fieldSizeX; i++) {
+//                for (int j = 0; j < fieldSizeY; j++) {
+//
+//                    field[i][j] == c
+//                }
+//            }
 
 
         return false;
@@ -168,58 +168,58 @@ public class Main {
         return x >= 0 && x < fieldSizeX && y >= 0 && y < fieldSizeY;
     }
 
-    private static boolean checkPont(char c, int x, int y) {
-        int cnt = 0;
-        for (int )
-        while (condition == f)
-        (int i = 0; i < fieldSizeY; i++){
-            if(field[x][i] == c) {
-            }
-                break;
-            if(field[x][i] != c)
-                break;
-            if(i == fieldSizeY-1){
-                //report win for s
-            }
-        }
-
-        //check row
-        for(int i = 0; i < n; i++){
-            if(board[i][y] != s)
-                break;
-            if(i == n-1){
-                //report win for s
-            }
-        }
-
-        //check diag
-        if(x == y){
-            //we're on a diagonal
-            for(int i = 0; i < n; i++){
-                if(board[i][i] != s)
-                    break;
-                if(i == n-1){
-                    //report win for s
-                }
-            }
-        }
-
-        //check anti diag (thanks rampion)
-        if(x + y == n - 1){
-            for(int i = 0; i < n; i++){
-                if(board[i][(n-1)-i] != s)
-                    break;
-                if(i == n-1){
-                    //report win for s
-                }
-            }
-        }
-
-        //check draw
-        if(moveCount == (Math.pow(n, 2) - 1)){
-            //report draw
-        }
-    }
-    }
+//    private static boolean checkPont(char c, int x, int y) {
+//        int cnt = 0;
+//        for (int )
+//        while (condition == f)
+//        (int i = 0; i < fieldSizeY; i++){
+//            if(field[x][i] == c) {
+//            }
+//                break;
+//            if(field[x][i] != c)
+//                break;
+//            if(i == fieldSizeY-1){
+//                //report win for s
+//            }
+//        }
+//
+//        //check row
+//        for(int i = 0; i < n; i++){
+//            if(board[i][y] != s)
+//                break;
+//            if(i == n-1){
+//                //report win for s
+//            }
+//        }
+//
+//        //check diag
+//        if(x == y){
+//            //we're on a diagonal
+//            for(int i = 0; i < n; i++){
+//                if(board[i][i] != s)
+//                    break;
+//                if(i == n-1){
+//                    //report win for s
+//                }
+//            }
+//        }
+//
+//        //check anti diag (thanks rampion)
+//        if(x + y == n - 1){
+//            for(int i = 0; i < n; i++){
+//                if(board[i][(n-1)-i] != s)
+//                    break;
+//                if(i == n-1){
+//                    //report win for s
+//                }
+//            }
+//        }
+//
+//        //check draw
+//        if(moveCount == (Math.pow(n, 2) - 1)){
+//            //report draw
+//        }
+//    }
+//    }
 
 }
