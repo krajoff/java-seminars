@@ -93,37 +93,30 @@ public class Main {
      * @return результат проверки
      */
     static boolean checkWin(char c) {
+        int tfx, tfy, tfdr, tfdl;
         for (int i = 0; i < fieldSizeX; i++) {
             for (int j = 0; j < fieldSizeY; j++) {
-                boolean tfx = true;
-                boolean tfy = true;
-                boolean tfdr = true;
-                boolean tfdl = true;
+                tfx = 0;
+                tfy = 0;
+                tfdr = 0;
+                tfdl = 0;
                 for (int k = 0; k < WIN_COUNT; k++) {
-                    if (i < fieldSizeX - WIN_COUNT) {
-                        tfx = tfx && field[i + k][j] == c;
-                    }
-                    if (j < fieldSizeY - WIN_COUNT) {
-                        tfy = tfy && field[i][j + k] == c;
-                    }
-                    if (j < fieldSizeY - WIN_COUNT &&
-                            i < fieldSizeX - WIN_COUNT) {
-                        tfdr = tfdr && field[i + k][j + k] == c;
-                    }
-
-                    if (i < fieldSizeX - WIN_COUNT && j >= WIN_COUNT-1) {
-                        tfdl = tfdl && field[i - k][j - k] == c;
-                    }
+                    if (i < fieldSizeX - WIN_COUNT + 1)
+                        tfx =  field[i + k][j] == c ? tfx + 1 : 0;
+                    if (j < fieldSizeY - WIN_COUNT + 1)
+                        tfy = field[i][j + k] == c ? tfy + 1 : 0;
+                    if (j < fieldSizeY - WIN_COUNT + 1 &&
+                            i < fieldSizeX - WIN_COUNT + 1)
+                        tfdr = field[i + k][j + k] == c ? tfdr + 1 : 0;
+                    if (i < fieldSizeX - WIN_COUNT + 1 &&
+                            j > fieldSizeY - WIN_COUNT + 1)
+                        tfdl = field[i + k][j - k] == c ? tfdl + 1 : 0;
                 }
-            if (tfx || tfy || tfdr || tfdl == true)
-                return true;
+                if (tfx == WIN_COUNT || tfy == WIN_COUNT || tfdr == WIN_COUNT || tfdl == WIN_COUNT)
+                    return true;
             }
         }
         return false;
-    }
-
-    static boolean checkWin1(char c, int x, int y, int win) {
-        return true;
     }
 
     private static boolean checkDraw() {
@@ -134,7 +127,6 @@ public class Main {
         }
         return true;
     }
-
 
     private static void humanTurn() {
         int x, y;
@@ -162,63 +154,8 @@ public class Main {
         return field[x][y] == DOT_EMPTY;
     }
 
-
     private static boolean isCellValid(int x, int y) {
         return x >= 0 && x < fieldSizeX && y >= 0 && y < fieldSizeY;
     }
-
-//    private static boolean checkPont(char c, int x, int y) {
-//        int cnt = 0;
-//        for (int )
-//        while (condition == f)
-//        (int i = 0; i < fieldSizeY; i++){
-//            if(field[x][i] == c) {
-//            }
-//                break;
-//            if(field[x][i] != c)
-//                break;
-//            if(i == fieldSizeY-1){
-//                //report win for s
-//            }
-//        }
-//
-//        //check row
-//        for(int i = 0; i < n; i++){
-//            if(board[i][y] != s)
-//                break;
-//            if(i == n-1){
-//                //report win for s
-//            }
-//        }
-//
-//        //check diag
-//        if(x == y){
-//            //we're on a diagonal
-//            for(int i = 0; i < n; i++){
-//                if(board[i][i] != s)
-//                    break;
-//                if(i == n-1){
-//                    //report win for s
-//                }
-//            }
-//        }
-//
-//        //check anti diag (thanks rampion)
-//        if(x + y == n - 1){
-//            for(int i = 0; i < n; i++){
-//                if(board[i][(n-1)-i] != s)
-//                    break;
-//                if(i == n-1){
-//                    //report win for s
-//                }
-//            }
-//        }
-//
-//        //check draw
-//        if(moveCount == (Math.pow(n, 2) - 1)){
-//            //report draw
-//        }
-//    }
-//    }
 
 }
