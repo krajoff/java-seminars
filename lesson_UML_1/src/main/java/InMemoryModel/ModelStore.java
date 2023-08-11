@@ -6,7 +6,7 @@ import Stuff.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ModelStore {
+public class ModelStore implements IModelChanger{
     public List<PoligonalModel> models;
     public List<Scene> scenes;
     public List<Flash> flashes;
@@ -38,6 +38,7 @@ public class ModelStore {
         return null;
     }
 
+    @Override
     public void NotifyChange(IModelChanger modelChanger) {
     }
 }
