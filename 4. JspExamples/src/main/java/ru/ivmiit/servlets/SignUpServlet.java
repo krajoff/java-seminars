@@ -24,7 +24,7 @@ import java.util.List;
  * @author Sidikov Marsel (First Software Engineering Platform)
  * @version v1.0
  */
-@WebServlet("./signUp")
+@WebServlet("/signUp")
 public class SignUpServlet extends HttpServlet {
 
     private UsersRepository usersRepository;

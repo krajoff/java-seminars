@@ -16,7 +16,7 @@ import java.io.IOException;
  * @author Sidikov Marsel (First Software Engineering Platform)
  * @version v1.0
  */
-@WebFilter("./home")
+@WebFilter("/home")
 public class AuthFilter implements Filter{
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {

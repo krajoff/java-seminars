@@ -17,7 +17,7 @@ import java.io.IOException;
  * @author Sidikov Marsel (First Software Engineering Platform)
  * @version v1.0
  */
-@WebServlet("./home")
+@WebServlet("/home")
 public class HomeServlet extends HttpServlet {
 
     // в случае GET-запроса следует просто отдать страницу home
