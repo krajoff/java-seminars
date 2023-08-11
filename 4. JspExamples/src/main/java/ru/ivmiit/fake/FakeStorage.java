@@ -16,7 +16,7 @@ import java.util.List;
  * @author Sidikov Marsel (First Software Engineering Platform)
  * @version v1.0
  */
-public class FakeStorage {
+public class  FakeStorage {
     // переменная, которая хранит ссылку на единственный экземпляр объекта класса FakeStorage
     private static final FakeStorage storage;
 

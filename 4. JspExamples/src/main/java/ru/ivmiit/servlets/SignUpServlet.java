@@ -24,7 +24,7 @@ import java.util.List;
  * @author Sidikov Marsel (First Software Engineering Platform)
  * @version v1.0
  */
-@WebServlet("/signUp")
+@WebServlet("./signUp")
 public class SignUpServlet extends HttpServlet {
 
     private UsersRepository usersRepository;
@@ -38,7 +38,7 @@ public class SignUpServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<User> users = usersRepository.findAll();
         req.setAttribute("usersFromServer", users);
-        RequestDispatcher dispatcher = req.getServletContext().getRequestDispatcher("/jsp/signUp.jsp");
+        RequestDispatcher dispatcher = req.getServletContext().getRequestDispatcher("./jsp/signUp.jsp");
         dispatcher.forward(req, resp);
     } 
 

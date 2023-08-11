@@ -17,13 +17,13 @@ import java.io.IOException;
  * @author Sidikov Marsel (First Software Engineering Platform)
  * @version v1.0
  */
-@WebServlet("/home")
+@WebServlet("./home")
 public class HomeServlet extends HttpServlet {
 
     // в случае GET-запроса следует просто отдать страницу home
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getServletContext().getRequestDispatcher("/jsp/home.jsp").forward(req, resp);
+        req.getServletContext().getRequestDispatcher("./jsp/home.jsp").forward(req, resp);
     }
 
     // обработка запроса, который должен поменять цвет заголовка
@@ -36,6 +36,6 @@ public class HomeServlet extends HttpServlet {
         // кладем в ответ
         resp.addCookie(colorCookie);
         // перенаправляем пользователя обратно на страницу home
-        resp.sendRedirect(req.getContextPath() + "/home");
+        resp.sendRedirect(req.getContextPath() + "./home");
     }
 }

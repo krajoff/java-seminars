@@ -16,7 +16,7 @@ import java.io.IOException;
  * @author Sidikov Marsel (First Software Engineering Platform)
  * @version v1.0
  */
-@WebFilter("/home")
+@WebFilter("./home")
 public class AuthFilter implements Filter{
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -35,7 +35,7 @@ public class AuthFilter implements Filter{
 
         // если сессия не была, или у сессии отсутствует атрибут user, перенаправляем пользователя на страницу с логином
         if (session == null || session.getAttribute("user") == null) {
-            servletRequest.getServletContext().getRequestDispatcher("/login").forward(request, response);
+            servletRequest.getServletContext().getRequestDispatcher("./login").forward(request, response);
         }
         // отдаем запрос дальше в цепочку фильтров
         chain.doFilter(request, response);

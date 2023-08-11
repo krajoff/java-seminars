@@ -14,7 +14,7 @@
 <%--Цвет текста берем из значения куки color --%>
 <span style="color: ${cookie.color.value}">Hello</span>
 
-<form method="post" action="/home">
+<form method="post" action="./home">
     <label for="color">
         <select name="color" id="color">
             <option value="red">Красный</option>

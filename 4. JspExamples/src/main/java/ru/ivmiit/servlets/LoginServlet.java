@@ -20,7 +20,7 @@ import java.io.IOException;
  * @author Sidikov Marsel (First Software Engineering Platform)
  * @version v1.0
  */
-@WebServlet("/login")
+@WebServlet("./login")
 public class LoginServlet extends HttpServlet {
 
     // ссылка на хранилище пользователей
@@ -33,7 +33,7 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getServletContext().getRequestDispatcher("/jsp/login.jsp").forward(req, resp);
+        req.getServletContext().getRequestDispatcher("./jsp/login.jsp").forward(req, resp);
     }
 
     @Override
@@ -49,9 +49,9 @@ public class LoginServlet extends HttpServlet {
             // кладем в атрибуты сессии атрибут user с именем пользователя
             session.setAttribute("user", name);
             // перенаправляем на страницу home
-            req.getServletContext().getRequestDispatcher("/home").forward(req, resp);
+            req.getServletContext().getRequestDispatcher("./home").forward(req, resp);
         } else {
-            resp.sendRedirect(req.getContextPath() + "/login");
+            resp.sendRedirect(req.getContextPath() + "./login");
         }
 
     }
