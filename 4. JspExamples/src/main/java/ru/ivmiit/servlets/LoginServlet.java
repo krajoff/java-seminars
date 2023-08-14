@@ -49,9 +49,9 @@ public class LoginServlet extends HttpServlet {
             // кладем в атрибуты сессии атрибут user с именем пользователя
             session.setAttribute("user", name);
             // перенаправляем на страницу home
-            req.getServletContext().getRequestDispatcher("./home").forward(req, resp);
+            req.getServletContext().getRequestDispatcher("/home").forward(req, resp);
         } else {
-            resp.sendRedirect(req.getContextPath() + "./login");
+            resp.sendRedirect(req.getContextPath() + "/login");
         }
 
     }

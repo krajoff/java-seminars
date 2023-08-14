@@ -31,9 +31,9 @@ public class  FakeStorage {
     // приватный констуктор, выполняющий инициализацию списка
     private FakeStorage() {
         this.users = new ArrayList<>();
-        User user = new User("Marsel", "qwerty007", LocalDate.parse("1994-02-02"));
-        User user1 = new User("Marsel1", "qwerty007", LocalDate.parse("1994-02-02"));
-        User user2 = new User("Marsel2", "qwerty007", LocalDate.parse("1994-02-02"));
+        User user = new User("m", "1", LocalDate.parse("1994-02-02"));
+        User user1 = new User("Marsel1", "1", LocalDate.parse("1994-02-02"));
+        User user2 = new User("Marsel2", "1", LocalDate.parse("1994-02-02"));
 
         users.add(user);
         users.add(user1);

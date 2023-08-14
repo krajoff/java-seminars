@@ -36,6 +36,6 @@ public class HomeServlet extends HttpServlet {
         // кладем в ответ
         resp.addCookie(colorCookie);
         // перенаправляем пользователя обратно на страницу home
-        resp.sendRedirect(req.getContextPath() + "./home");
+        resp.sendRedirect(req.getContextPath() + "/home");
     }
 }
