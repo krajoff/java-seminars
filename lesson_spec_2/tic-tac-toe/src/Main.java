@@ -21,13 +21,14 @@ public class Main {
     public static void main(String[] args) {
         while (true) {
             initialize();
+            int[] turn;
             while (true) {
                 printField();
-                humanTurn();
+                turn = humanTurn();
                 printField();
                 if (gameCheck(DOT_HUMAN, "You win"))
                     break;
-                aiTurn();
+                aiTurn(turn);
                 printField();
                 if (gameCheck(DOT_AI, "AI win"))
                     break;
@@ -102,7 +103,7 @@ public class Main {
                 tfdl = 0;
                 for (int k = 0; k < WIN_COUNT; k++) {
                     if (i < fieldSizeX - WIN_COUNT + 1)
-                        tfx =  field[i + k][j] == c ? tfx + 1 : 0;
+                        tfx = field[i + k][j] == c ? tfx + 1 : 0;
                     if (j < fieldSizeY - WIN_COUNT + 1)
                         tfy = field[i][j + k] == c ? tfy + 1 : 0;
                     if (j < fieldSizeY - WIN_COUNT + 1 &&
@@ -128,8 +129,9 @@ public class Main {
         return true;
     }
 
-    private static void humanTurn() {
+    private static int[] humanTurn() {
         int x, y;
+        int[] turn = new int[2];
         do {
             System.out.print("Input X & Y with whitespace: ");
             x = getScanner().nextInt() - 1;
@@ -137,11 +139,21 @@ public class Main {
         }
         while (!isCellValid(x, y) || !isCellEmpty(x, y));
         field[x][y] = DOT_HUMAN;
+        turn[0] = x;
+        turn[1] = y;
+        return turn;
     }
 
 
-    private static void aiTurn() {
-        int x, y;
+    private static void aiTurn(int[] turn) {
+        int x = turn[1];
+        int y = turn[2];
+        for (int k = 0; k < 7; k++) {
+            if (x>0  )
+            }
+
+
+
         do {
             x = random.nextInt(fieldSizeX);
             y = random.nextInt(fieldSizeY);
