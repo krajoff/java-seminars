@@ -1,6 +1,6 @@
 package storages;
 /**
- * База пользователей
+ * База пользователей через синглтон
  */
 import models.Customer;
 import provider.CashProvider;
