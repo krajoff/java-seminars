@@ -1,5 +1,7 @@
 package storages;
-
+/**
+ * База пользователей
+ */
 import models.Customer;
 import provider.CashProvider;
 import provider.Ticket;
@@ -21,8 +23,10 @@ public class CustomerStorage {
         this.customers = new ArrayList<>();
         Customer customer1 = new Customer(1, "stan", null, null);
         List<Ticket> tickets = new ArrayList<>();
-        tickets.add(new Ticket(1,5.5,1, LocalDateTime.parse("2018-12-30T19:34:50.63"), true, "nik"));
-        tickets.add(new Ticket(2,6.5,1, LocalDateTime.parse("2018-12-30T19:34:50.63"), true, "nik"));
+        tickets.add(new Ticket(1,5.5,1, LocalDateTime.parse("2018-12-30T19:34:50.63"),
+                true, "nik"));
+        tickets.add(new Ticket(2,6.5,1, LocalDateTime.parse("2018-12-30T19:34:50.63"),
+                true, "nik"));
         Customer customer2 = new Customer(2, "nik", tickets, null);
         customers.add(customer1);
         customers.add(customer2);
@@ -35,4 +39,6 @@ public class CustomerStorage {
     public List<Customer> customers() {
         return customers;
     }
+
+
 }

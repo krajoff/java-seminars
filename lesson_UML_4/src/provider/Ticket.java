@@ -21,4 +21,11 @@ public class Ticket {
         this.isValid = isValid;
         this.nameCustomer = nameCustomer;
     }
+
+    @Override
+    public String toString() {
+        return "rootNumber=" + this.rootNumber +
+               " data=" + this.data +
+               " price=" + this.price;
+    }
 }

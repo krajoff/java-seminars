@@ -1,5 +1,7 @@
 package models;
-
+/**
+ * Класс пользвателей сервиса
+ */
 import provider.CashProvider;
 import provider.Ticket;
 
@@ -26,5 +28,9 @@ public class Customer {
 
     public Ticket[] searchTicket(LocalDateTime DataTime) {
         return null;
+    }
+
+    public List<Ticket> getTickets() {
+        return tickets;
     }
 }

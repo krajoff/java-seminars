@@ -12,7 +12,13 @@ public class Program {
                     "1 - вывести билеты пользователя. " +
                     "2 - найти новые билеты: ");
             String str = scanner.nextLine();
-            System.out.println(str);
+            switch (str){
+                case "1":
+                    System.out.println(customsRepository.tickets(name));
+                    break;
+                case "2":
+                    break;
+            }
 
         }
 

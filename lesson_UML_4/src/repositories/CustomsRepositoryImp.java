@@ -1,7 +1,10 @@
 package repositories;
-
+/**
+ * Класс реализующий интерфейс поведения объекта пользователь, предоставляющего данные о нем
+ */
 
 import models.Customer;
+import provider.Ticket;
 import storages.CustomerStorage;
 
 import java.time.LocalDate;
@@ -27,4 +30,13 @@ public class CustomsRepositoryImp implements CustomsRepository {
         }
         return false;
     }
+    public List<Ticket> tickets(String name) {
+        for (Customer customer : CustomerStorage.storage().customers()) {
+            if (customer.name.equals(name)) {
+                return customer.getTickets();
+            }
+        }
+        return null;
+    }
+
 }
