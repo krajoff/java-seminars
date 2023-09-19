@@ -16,7 +16,7 @@ public class DBUtils {
         Properties properties = new Properties();
 
         try {
-            fis = new FileInputStream("scr/main/resources/config.properties");
+            fis = new FileInputStream("src/main/resources/config.properties");
             properties.load(fis);
             dbURL = properties.getProperty("db.host");
             dbUser = properties.getProperty("db.user");
