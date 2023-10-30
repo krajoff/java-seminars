@@ -10,7 +10,7 @@ import java.util.Random;
  */
 public class Main {
     public static void main(String[] args) {
-        int number = 10;
+        int number = 100;
         Double[] array1 = rndArray(number);
         Double[] array2 = rndArray(number);
         System.out.println("Pearson ratio = " + pearsonRatio(array1, array2));
