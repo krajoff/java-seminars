@@ -6,12 +6,16 @@ public class Main {
     public static void main(String[] args) {
         Double[] predict = new Double[]{0.0, 0.1, 1.1, 1.0, 2.0};
         Double[] real = new Double[]{0.0, 0.1, 1.1, 1.0, 2.1};
+        int p;
         System.out.printf("1.Task MSE = %.3f", mse(predict, real));
         System.out.println();
-        Integer[] unsorted = new Integer[]{2, 0, -4, -5, 10, 9, -1, 6, 8};
+        Integer[] unsorted = new Integer[]{2, 0, -4, -5, 10, 9, -1,
+                6, 8, -3, 5, 7, -2, 1, 4, 3};
         System.out.println("2.Task. unsorted array: " + Arrays.toString(unsorted));
         mergeSort(unsorted, unsorted.length);
         System.out.println("sorted array: " + Arrays.toString(unsorted));
+        System.out.println("3.Binary search: " +
+                Arrays.binarySearch(unsorted, 6));
     }
 
     public static Double mse(Double[] real, Double[] predict) {
@@ -42,7 +46,7 @@ public class Main {
         while (i < left && j < right) {
             if (l[i] <= r[j])
                 a[k++] = l[i++];
-             else
+            else
                 a[k++] = r[j++];
         }
         while (i < left)
