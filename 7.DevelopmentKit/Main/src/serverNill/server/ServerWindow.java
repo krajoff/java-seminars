@@ -1,4 +1,4 @@
-package ServerClient.server;
+package serverNill.server;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,7 +23,7 @@ public class ServerWindow extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setBounds(POS_X, POS_Y, WIDTH, HEIGHT);
         setResizable(false);
-        setTitle("Chat server");
+        setTitle("Chat Server");
         setAlwaysOnTop(false);
 
         panelBottom.add(btnStart, BorderLayout.CENTER);
@@ -57,6 +57,8 @@ public class ServerWindow extends JFrame {
                 }
             }
         });
+
+
     }
 
     public boolean isServerWorking() {
@@ -65,5 +67,9 @@ public class ServerWindow extends JFrame {
 
     public void setLog(String log) {
         this.log.append(log);
+    }
+
+    public JTextArea getLog() {
+        return log;
     }
 }
