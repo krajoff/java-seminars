@@ -16,16 +16,19 @@ public class Philosopher implements Runnable {
     }
 
     public void eat() {
-        countEating++;
-        justEaten = true;
-        System.out.println("Philosopher " + (id + 1) + " is eating (" + countEating + " times)");
+        synchronized (leftFork) {
+            synchronized (rightFork) {
+                countEating++;
+                justEaten = true;
+                System.out.println("Philosopher " + (id + 1) + " is eating (" + countEating + " times)");
+            }
+        }
     }
 
     public void speculate() {
         System.out.println("Philosopher " + (id + 1) + " is speculating...");
         justEaten = false;
     }
-
 
     @Override
     public void run() {
