@@ -1,5 +1,7 @@
 package Philosophes;
 
+import java.util.concurrent.Semaphore;
+
 public class Philosopher implements Runnable {
     private int id;
     protected int countEating;
@@ -21,7 +23,6 @@ public class Philosopher implements Runnable {
         System.out.println("Philosopher " + (id + 1) + " is eating (" + countEating + " times)");
     }
 
-
     public void speculate() {
         System.out.println("Philosopher " + (id + 1) + " is speculating...");
         justEaten = false;
@@ -30,9 +31,14 @@ public class Philosopher implements Runnable {
     @Override
     public void run() {
         while (countEating < 3) {
-            speculate();
-            if (!justEaten) {
-                eat();
+            synchronized (leftFork) {
+                synchronized (rightFork) {
+                    if (!justEaten) {
+                        eat();
+                    } else {
+                        speculate();
+                    }
+                }
             }
         }
     }

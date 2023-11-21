@@ -1,5 +1,7 @@
 package Philosophes;
 
+import java.util.concurrent.Semaphore;
+
 /**
  * 1. Пять безмолвных философов сидят вокруг круглого стола, перед каждым философом стоит тарелка спагетти.
  * 2. Вилки лежат на столе между каждой парой ближайших философов.
@@ -9,7 +11,8 @@ package Philosophes;
  * Описать в виде кода такую ситуацию. Каждый философ должен поесть три раза
  */
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
+
         int numbers = 5;
 
         // Создаем вилки
@@ -20,7 +23,7 @@ public class Main {
 
         for (int i = 0; i < numbers; i++) {
             Object leftFork = forks[i];
-            Object rightFork = forks[(i+1) % numbers];
+            Object rightFork = forks[(i + 1) % numbers];
             new Thread(new Philosopher(i, leftFork, rightFork)).start();
         }
     }
