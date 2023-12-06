@@ -21,10 +21,10 @@ public class Cart<T extends Food> {
 
     /**
      * Создание нового экземпляра корзины
+     *
      * @param market принадлежность к магазину
      */
-    public Cart(Class<T> clazz, UMarket market)
-    {
+    public Cart(Class<T> clazz, UMarket market) {
         this.clazz = clazz;
         this.market = market;
         foodstuffs = new ArrayList<>();
@@ -35,51 +35,27 @@ public class Cart<T extends Food> {
     /**
      * Балансировка корзины
      */
-    public void cardBalancing()
-    {
-        boolean proteins = false;
-        boolean fats = false;
-        boolean carbohydrates = false;
+    public void cardBalancing() {
+        boolean proteins = foodstuffs.stream().anyMatch(Food::getProteins);
+        boolean fats = foodstuffs.stream().anyMatch(Food::getFats);
+        boolean carbohydrates = foodstuffs.stream().anyMatch(Food::getCarbohydrates);
 
-        for (var food : foodstuffs)
-        {
-            if (!proteins && food.getProteins())
-                proteins = true;
-            else
-            if (!fats && food.getFats())
-                fats = true;
-            else
-            if (!carbohydrates && food.getCarbohydrates())
-                carbohydrates = true;
-            if (proteins && fats && carbohydrates)
-                break;
-        }
-
-        if (proteins && fats && carbohydrates)
-        {
+        if (proteins && fats && carbohydrates) {
             System.out.println("Корзина уже сбалансирована по БЖУ.");
             return;
         }
 
-        for (var thing : market.getThings(clazz))
-        {
-            if (!proteins && thing.getProteins())
-            {
-                proteins = true;
-                foodstuffs.add(thing);
-            }
-            else if (!fats && thing.getFats())
-            {
-                fats = true;
-                foodstuffs.add(thing);
-            }
-            else if (!carbohydrates && thing.getCarbohydrates())
-            {
-                carbohydrates = true;
-                foodstuffs.add(thing);
-            }
-            if (proteins && fats && carbohydrates)
-                break;
+        if (!proteins) {
+            foodstuffs.add(market.getThings(clazz).stream()
+                    .filter(Food::getProteins).findFirst().get());
+        }
+        if (!fats) {
+            foodstuffs.add(market.getThings(clazz).stream()
+                    .filter(Food::getFats).findFirst().get());
+        }
+        if (!carbohydrates) {
+            foodstuffs.add(market.getThings(clazz).stream()
+                    .filter(Food::getCarbohydrates).findFirst().get());
         }
 
         if (proteins && fats && carbohydrates)
@@ -96,8 +72,7 @@ public class Cart<T extends Food> {
     /**
      * Распечатать список продуктов в корзине
      */
-    public void printFoodstuffs()
-    {
+    public void printFoodstuffs() {
         AtomicInteger index = new AtomicInteger(1);
         foodstuffs.forEach(food -> System.out.printf("[%d] %s (Белки: %s Жиры: %s Углеводы: %s)\n",
                 index.getAndIncrement(), food.getName(),
