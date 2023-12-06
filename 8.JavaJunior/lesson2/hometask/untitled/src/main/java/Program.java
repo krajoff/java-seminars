@@ -31,8 +31,6 @@ public class Program {
         Class<?> catClass = Class.forName("Cat");
         Class<?> animalClass = Class.forName("Animal");
 
-
-        Constructor[] constructorsAnimal = animalClass.getConstructors();
         Constructor[] constructorsDog = dogClass.getConstructors();
         Constructor[] constructorsCat = catClass.getConstructors();
 
@@ -42,7 +40,7 @@ public class Program {
 
         animals.forEach(System.out::println);
 
-        Method method = dogClass.getDeclaredMethod("makeSound");
+        Method method = animalClass.getDeclaredMethod("makeSound");
 
         for (int i = 0; i < animals.size(); i++) {
             try {
