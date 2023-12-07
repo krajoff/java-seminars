@@ -33,10 +33,14 @@ public class Program {
 
         Constructor[] constructorsDog = dogClass.getConstructors();
         Constructor[] constructorsCat = catClass.getConstructors();
+        Constructor[] constructorsAnimal = animalClass.getConstructors();
+
 
         animals.add(constructorsDog[0].newInstance("Bobik", 15, 35));
         animals.add(constructorsCat[0].newInstance("Kitty", 10, 5));
+        animals.add(constructorsAnimal[0].newInstance("Piggy", 20));
         animals.add(constructorsDog[0].newInstance("Spyk", 20, 45));
+
 
         animals.forEach(System.out::println);
 

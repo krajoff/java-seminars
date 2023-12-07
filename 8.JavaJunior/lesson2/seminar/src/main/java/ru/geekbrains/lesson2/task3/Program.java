@@ -22,6 +22,11 @@ public class Program {
         Создайте простой класс, аннотированный для маппинга с базой данных.
         Используйте ваш фреймворк для генерации SQL-запросов для различных операций,
         таких как вставка, выборка, обновление и удаление.
+
+     * Доработайте метод генерации запроса на удаление объекта из таблицы
+     * БД (DELETE FROM <Table> WHERE ID = '<id>')
+     * В классе QueryBuilder который мы разработали на семинаре.
+
     */
     public static void main(String[] args) throws IllegalAccessException {
         Employee user = new Employee("Stanislav", "sample@gmail.com");
@@ -31,6 +36,7 @@ public class Program {
         System.out.println("Insert query: " + queryBuilder.buildInsertQuery(user));
         System.out.println("Select query: " + queryBuilder.buildSelectQuery(Employee.class, pk));
         System.out.println("Update query: " + queryBuilder.buildUpdateQuery(user));
+        System.out.println("Delete query: " + queryBuilder.buildDeleteQuery(Employee.class, pk));
     }
 
 }

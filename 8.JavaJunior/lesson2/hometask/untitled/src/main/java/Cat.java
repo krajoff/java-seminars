@@ -8,6 +8,6 @@ public class Cat extends Animal {
 
     @Override
     public void makeSound() {
-        System.out.println("Мяу!");
+        System.out.println(name + ": Мяу!");
     }
 }

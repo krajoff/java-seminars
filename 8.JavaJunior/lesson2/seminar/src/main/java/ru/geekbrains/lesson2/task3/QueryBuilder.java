@@ -9,7 +9,7 @@ public class QueryBuilder {
         Class<?> clazz = obj.getClass();
         StringBuilder query = new StringBuilder("INSERT INTO ");
 
-        if (clazz.isAnnotationPresent(Table.class)){
+        if (clazz.isAnnotationPresent(Table.class)) {
             Table tableAnnotation = clazz.getAnnotation(Table.class);
             query
                     .append(tableAnnotation.name())
@@ -49,13 +49,12 @@ public class QueryBuilder {
 
             return query.toString();
 
-        }
-        else {
+        } else {
             return null;
         }
     }
 
-    public String buildSelectQuery(Class<?> clazz, UUID primaryKey){
+    public String buildSelectQuery(Class<?> clazz, UUID primaryKey) {
         StringBuilder query = new StringBuilder("SELECT * FROM ");
         if (clazz.isAnnotationPresent(Table.class)) {
             Table tableAnnotation = clazz.getAnnotation(Table.class);
@@ -65,7 +64,7 @@ public class QueryBuilder {
             for (Field field : fields) {
                 if (field.isAnnotationPresent(Column.class)) {
                     Column columnAnnotation = field.getAnnotation(Column.class);
-                    if (columnAnnotation.primaryKey()){
+                    if (columnAnnotation.primaryKey()) {
                         query
                                 .append(columnAnnotation.name())
                                 .append(" = '")
@@ -76,8 +75,7 @@ public class QueryBuilder {
                 }
             }
             return query.toString();
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -95,8 +93,7 @@ public class QueryBuilder {
                     field.setAccessible(true);
 
                     Column columnAnnotation = field.getAnnotation(Column.class);
-                    if (columnAnnotation.primaryKey())
-                    {
+                    if (columnAnnotation.primaryKey()) {
                         continue;
                     }
                     query.append(columnAnnotation.name()).append(" = '")
@@ -113,7 +110,7 @@ public class QueryBuilder {
             for (Field field : fields) {
                 if (field.isAnnotationPresent(Column.class)) {
                     Column columnAnnotation = field.getAnnotation(Column.class);
-                    if (columnAnnotation.primaryKey()){
+                    if (columnAnnotation.primaryKey()) {
                         query
                                 .append(columnAnnotation.name())
                                 .append(" = '")
@@ -125,20 +122,28 @@ public class QueryBuilder {
             }
 
             return query.toString();
-        }
-        else {
+        } else {
             return null;
         }
     }
 
     /**
      * TODO: Доработать дополнительно в рамках домашней работы
+     *
      * @return
      */
-    public String buildDeleteQuery(){
-        return null;
+    public String buildDeleteQuery(Class<?> clazz, UUID primaryKey) {
+        StringBuilder query = new StringBuilder("DELETE FROM ");
+        if (clazz.isAnnotationPresent(Table.class)) {
+            Table tableAnnotation = clazz.getAnnotation(Table.class);
+            query.append(tableAnnotation.name())
+                    .append(" WHERE ")
+                    .append("id = '")
+                    .append(primaryKey)
+                    .append("'");
+            return query.toString();
+        } else {
+            return null;
+        }
     }
-
-
-
 }
