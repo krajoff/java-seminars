@@ -21,7 +21,7 @@ public class Course {
     private String title;
     private int duration;
 
-    public Course create() {
+    public static Course create() {
         return
                 new Course(titles[random.nextInt(titles.length)],
                         random.nextInt(100) + 1);

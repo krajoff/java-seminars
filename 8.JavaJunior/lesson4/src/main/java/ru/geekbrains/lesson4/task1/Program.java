@@ -23,7 +23,7 @@ public class Program {
      */
 
     public static void main(String[] args) {
-        String url = "jdbc:mysql://students.db:3306/";
+        String url = "jdbc:mysql://localhost:3366/";
         String user = "root";
         String password = "password";
 
@@ -54,7 +54,7 @@ public class Program {
             for (var student: students)
                 System.out.println(student);
             System.out.println("Read data successfully");
-
+ /**
             // Обновление данных
             for (var student: students) {
                 student.updateName();
@@ -63,7 +63,7 @@ public class Program {
             }
             System.out.println("Update data successfully");
 
-
+  */
             // Чтение данных
             students = readData(connection);
             for (var student: students)
@@ -71,13 +71,14 @@ public class Program {
             System.out.println("Read data successfully");
 
             // Удаление данных
-            for (var student: students)
-                deleteData(connection, student.getId());
-            System.out.println("Delete data successfully");
+            //for (var student: students)
+              //  deleteData(connection, student.getId());
+            //System.out.println("Delete data successfully");
 
             // Закрытие соединения
             connection.close();
             System.out.println("Database connection close successfully");
+
 
         } catch (SQLException e) {
             e.printStackTrace();

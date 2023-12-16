@@ -18,4 +18,4 @@ services:
     volumes:
       - ./.containers/database:/var/lib/mysql
     ports:
-      - 3306:3306
+      - 3366:3306

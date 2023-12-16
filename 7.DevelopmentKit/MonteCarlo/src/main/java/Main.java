@@ -25,6 +25,7 @@ public class Main {
                 result.put(i, 1);
             }
         }
+
         Integer sumWin = 0;
         for (Integer value : result.values()) {
             sumWin += value;
