@@ -15,7 +15,7 @@ public class ClientManager implements Runnable {
 
     //public static ArrayList<ClientManager> clients = new ArrayList<>();
 
-    public ClientManager(Socket socket){
+    public ClientManager(Socket socket) {
         try {
             this.socket = socket;
             bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -24,8 +24,7 @@ public class ClientManager implements Runnable {
             ClientManagerSingleton.getInstance().add(this);
             System.out.println(name + " подключился к чату.");
             broadcastMessage("Server: " + name + " подключился к чату.");
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             closeEverything(socket, bufferedReader, bufferedWriter);
         }
 
@@ -34,7 +33,8 @@ public class ClientManager implements Runnable {
     /**
      * Завершение работы всех потоков, закрытие соединения с клиентским сокетом,
      * удаление клиентского сокета из коллекции
-     * @param socket клиентский сокет
+     *
+     * @param socket         клиентский сокет
      * @param bufferedReader буфер для чтения данных
      * @param bufferedWriter буфер для отправки данных
      */
@@ -54,7 +54,7 @@ public class ClientManager implements Runnable {
             if (socket != null) {
                 socket.close();
             }
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -62,7 +62,7 @@ public class ClientManager implements Runnable {
     /**
      * Удаление клиента из коллекции
      */
-    private void removeClient(){
+    private void removeClient() {
         ClientManagerSingleton.getInstance().remove(this);
         System.out.println(name + " покинул чат.");
     }
@@ -72,24 +72,51 @@ public class ClientManager implements Runnable {
         String massageFromClient;
 
         // Цикл чтения данных от клиента
-        while (socket.isConnected()){
+        while (socket.isConnected()) {
             try {
                 // Чтение данных
                 massageFromClient = bufferedReader.readLine();
-                broadcastMessage(massageFromClient);
-            } catch (IOException e){
+                String[] messages = massageFromClient.split(" ");
+                if (messages[1].charAt(0) == '$') {
+                    privateMessage(massageFromClient);
+                } else {
+                    broadcastMessage(massageFromClient);
+                }
+            } catch (IOException e) {
                 closeEverything(socket, bufferedReader, bufferedWriter);
                 break;
             }
         }
     }
 
+
+    private void privateMessage(String message){
+        String[] messages = message.split(" ");
+        String person = messages[1].substring(1);
+        message = message.replaceFirst(person,"");
+        message = message.replaceFirst("\\$ ","");
+        message = "$" + message;
+        for (ClientManager client : ClientManagerSingleton.getInstance()) {
+            try {
+                if(client.name.equals(person)) {
+                    client.bufferedWriter.write(message);
+                    client.bufferedWriter.newLine();
+                    client.bufferedWriter.flush();
+                }
+            } catch (IOException e){
+                closeEverything(socket, bufferedReader, bufferedWriter);
+            }
+        }
+    }
+
+
     /**
      * Отправка сообщения всем слушателям
+     *
      * @param massage сообщение
      */
     private void broadcastMessage(String massage) {
-        for (ClientManager client: ClientManagerSingleton.getInstance()) {
+        for (ClientManager client : ClientManagerSingleton.getInstance()) {
             try {
                 // Если клиент не равен по наименованию клиенту-отправителю,
                 // отправим сообщение
@@ -98,7 +125,8 @@ public class ClientManager implements Runnable {
                     client.bufferedWriter.newLine();
                     client.bufferedWriter.flush();
                 }
-            } catch (IOException e){
+
+            } catch (IOException e) {
                 closeEverything(socket, bufferedReader, bufferedWriter);
             }
         }
