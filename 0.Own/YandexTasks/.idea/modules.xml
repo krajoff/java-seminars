@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/YandexTasks.iml" filepath="$PROJECT_DIR$/.idea/YandexTasks.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ya2023/ya2023.iml" filepath="$PROJECT_DIR$/ya2023/ya2023.iml" />
+      <module fileurl="file://$PROJECT_DIR$/yandexA/yandexA.iml" filepath="$PROJECT_DIR$/yandexA/yandexA.iml" />
+      <module fileurl="file://$PROJECT_DIR$/yandexB/yandexB.iml" filepath="$PROJECT_DIR$/yandexB/yandexB.iml" />
+      <module fileurl="file://$PROJECT_DIR$/yandexC/yandexC.iml" filepath="$PROJECT_DIR$/yandexC/yandexC.iml" />
+    </modules>
+  </component>
+</project>
