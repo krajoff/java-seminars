@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Definition for singly-linked list.
@@ -17,19 +14,26 @@ class Solution23 {
     public ListNode mergeKLists(ListNode[] lists) {
         ListNode res;
         List<Integer> temp = new ArrayList<>();
+        System.out.println(lists.length);
         if (lists.length == 0)
-            return new ListNode();
+            return null;
         for (int i = 0; i < lists.length; i++) {
-            do {
-                temp.add(lists[i].val);
-                lists[i] = lists[i].next;
+            System.out.println(lists[i] == null);
+            try {
+                do {
+
+                    temp.add(lists[i].val);
+                    lists[i] = lists[i].next;
+                }
+                while (lists[i] != null);
+            } catch (Exception e) {
+                continue;
             }
-            while (lists[i] != null);
         }
         temp.sort(Comparator.reverseOrder());
         //System.out.println(temp);
         if (temp.isEmpty())
-            return new ListNode();
+            return null;
         res = new ListNode(temp.get(0));
         for (int i = 1; i < temp.size(); i++) {
             res = new ListNode(temp.get(i), res);
@@ -51,8 +55,27 @@ public class MergekSorterdList_Task23 {
                 new ListNode(6));
         ListNode[] L = new ListNode[]{L1, L2, L3};
         Solution23 solution = new Solution23();
+
+        //ListNode{val=1, next=ListNode{val=1, next=ListNode{val=2,
+        // next=ListNode{val=3, next=ListNode{val=4,
+        // next=ListNode{val=4, next=ListNode{val=5,
+        // next=ListNode{val=6, next=null}}}}}}}}
         System.out.println(solution.mergeKLists(L));
+
+        //null
         ListNode[] L4 = new ListNode[]{};
         System.out.println(solution.mergeKLists(L4));
+
+        //null
+        ListNode L5 = new ListNode();
+        ListNode[] L6 = new ListNode[]{L5};
+        System.out.println(solution.mergeKLists(L6));
+
+        //ListNode{val=0, next=null}
+        ListNode L7 = new ListNode(0);
+        ListNode[] L8 = new ListNode[]{L7};
+        System.out.println(solution.mergeKLists(L8));
+
+
     }
 }
