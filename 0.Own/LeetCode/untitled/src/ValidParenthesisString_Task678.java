@@ -18,8 +18,9 @@ class Solution678 {
                 count--;
             }
         }
-        if (count == 0)
-            return true;
+//        System.out.println(sb);
+
+
         Stack<Integer> stack = new Stack<>();
         for (int i = 0; i < sb.length(); i++) {
             if (sb.charAt(i) == '(') {
@@ -32,6 +33,7 @@ class Solution678 {
             }
         }
         stack.clear();
+
         for (int i = sb.length() - 1; i > -1; i--) {
             if (sb.charAt(i) == ')') {
                 stack.push(i);
@@ -51,7 +53,6 @@ class Solution678 {
             }
 
         }
-        //System.out.println(sb);
         return sb.isEmpty();
     }
 }
@@ -100,6 +101,13 @@ public class ValidParenthesisString_Task678 {
             System.out.print("6.Bad: ");
             System.out.println(solution678
                     .checkValidString("(((((*)))**"));
+        }
+        if (!solution678.checkValidString("(*()))*(")) {
+            System.out.println("7.Good");
+        } else {
+            System.out.print("7.Bad: ");
+            System.out.println(solution678
+                    .checkValidString("(*()))*("));
         }
     }
 }
