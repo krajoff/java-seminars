@@ -4,54 +4,38 @@ import java.util.List;
 
 class Solution13 {
     public int romanToInt(String s) {
-        char letter;
-        List<Integer> numbers = new ArrayList<>();
-
-
+        int sum = 0;
         for (int i = 0; i < s.length(); i++) {
-
-            twoletters = s.substring(i,i+2)
-
-
-
-            letter = s.charAt(i);
-            switch (letter) {
-                case 'I':
-                    numbers.add(1);
-                    break;
-                case 'V':
-                    numbers.add(5);
-                    break;
-                case 'X':
-                    numbers.add(10);
-                    break;
-                case 'L':
-                    numbers.add(50);
-                    break;
-                case 'C':
-                    numbers.add(100);
-                    break;
-                case 'D':
-                    numbers.add(500);
-                    break;
-                case 'M':
-                    numbers.add(1000);
-                    break;
+            int num1 = simple(s.charAt(i));
+            if (i + 1 < s.length()) {
+                int num2 = simple(s.charAt(i + 1));
+                if (num1 >= num2) {
+                    sum = sum + num1;
+                } else {
+                    sum = sum - num1;
+                }
+            } else {
+                sum = sum + num1;
             }
         }
-        int sum, temp;
-        sum = temp = 0;
-        for (int i = 0; i < numbers.size(); i++) {
-            if (i > 1 && numbers.get(i) > numbers.get(i - 1)) {
-                sum = -temp;
-                temp = 0;
-            }
-            temp = temp + numbers.get(i);
-        }
-        sum=temp;
         return sum;
     }
+
+    public int simple(char letter) {
+        return switch (letter) {
+            case 'I' -> 1;
+            case 'V' -> 5;
+            case 'X' -> 10;
+            case 'L' -> 50;
+            case 'C' -> 100;
+            case 'D' -> 500;
+            case 'M' -> 1000;
+            default -> 0;
+        };
+    }
+
 }
+
 
 public class RomantoInteger_Task13 {
     public static void main(String[] args) {
