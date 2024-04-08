@@ -14,6 +14,7 @@ class Solution1700 {
                 total++;
                 l_sa.removeFirst();
                 l_st.removeFirst();
+                count = 0;
             } else {
                 l_st.addLast(l_st.getFirst());
                 l_st.removeFirst();
