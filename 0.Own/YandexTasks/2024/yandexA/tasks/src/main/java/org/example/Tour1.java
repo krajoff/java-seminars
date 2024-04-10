@@ -1,25 +1,23 @@
 package org.example;
 
 import java.io.*;
-import java.util.*;
-import java.util.regex.Pattern;
 
-import static java.util.Arrays.stream;
 
-public class Main {
+public class Tour1 {
     public static void main(String[] args) throws Exception {
-        String relativePath = "input.txt";
+        String relativePath = "input1.txt";
         String[] inputs = read(relativePath);
-//      String[] output = emoBoy(inputs);
-        String[] output = checkPrint(inputs);
-        String input = Arrays.toString(inputs);
-        //System.out.printf(input);
+        String[] output = emoBoy(inputs);
+        // String[] output = checkPrint(inputs);
+        // String input = Arrays.toString(inputs);
+        // System.out.printf(input);
         writeArray(output, "output.txt");
-        //writeNumber(100, "output.txt");
+        // writeNumber(100, "output.txt");
+        // NodeTasks nodeTasks = new NodeTasks();
+        // nodeTasks.res();
     }
 
-
-    static String[] checkPrint(String[] inputs) {
+    public static String[] checkPrint(String[] inputs) {
         String[] output = new String[1];
         StringBuilder word = new StringBuilder();
         String keyboard = inputs[1];
@@ -38,7 +36,7 @@ public class Main {
                 }
                 if (ch == '>')
                     action.append(ch);
-               // System.out.println(action);
+                // System.out.println(action);
                 switch (action.toString()) {
                     case ("<delete>"):
                         word.delete(position, position + 1);
@@ -49,7 +47,6 @@ public class Main {
                             word.delete(position - 1, position);
                             position--;
                         }
-                        //System.out.println(word);
                         break;
                     case ("<left>"):
                         if (position > 0)
@@ -60,11 +57,9 @@ public class Main {
                             position++;
                         break;
                 }
-                //System.out.println(position);
             } else {
                 word.insert(position, ch);
                 position++;
-                //System.out.println(word);
             }
         }
         if (word.toString().equals(inputs[0])) {
@@ -97,7 +92,6 @@ public class Main {
         FileWriter fw = new FileWriter(file);
         int n = txt.length;
         for (int i = 0; i < n; i++) {
-            // fw.write(i + " : " + txt[i] + "\n");
             fw.write(txt[i]);
         }
         fw.close();
@@ -129,5 +123,6 @@ public class Main {
         }
         return output;
     }
-}
 
+
+}
