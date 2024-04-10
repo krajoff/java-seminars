@@ -66,15 +66,19 @@ class Solution {
     int[][] fillField(String[] input) {
         int[][] turns = convert(input);
         int number_turns = turns.length;
-        int[][] field = new int[max_x][max_y];
+        int[][] field = new int[max_x + 1][max_y + 1];
         int x, y;
         for (int i = 0; i < number_turns; i++) {
             if (i % 2 == 0)
                 field[turns[i][0]][turns[i][1]] = 1;
             else
-                field[turns[i][0]][turns[i][1]] = 0;
+                field[turns[i][0]][turns[i][1]] = -1;
         }
         return field;
+    }
+
+    String check(int[][] field, int player) {
+        for
     }
 
     void printFiled(int[][] field) {
@@ -92,9 +96,8 @@ public class Tour2 {
         FileDealing fileDealing = new FileDealing();
         String[] inputs = fileDealing.read(relativePath);
         Solution solution = new Solution();
-
-
-        System.out.println(Arrays.deepToString(solution.fillField(inputs)));
+        int[][] field = solution.fillField(inputs);
+        solution.printFiled(field);
 
         String[] output = {"s", "d"};
         fileDealing.writeArray(output);
