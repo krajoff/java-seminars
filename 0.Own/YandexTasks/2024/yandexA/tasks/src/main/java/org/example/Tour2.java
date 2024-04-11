@@ -76,8 +76,10 @@ class Solution {
     }
 
     int[][] fillField(String[] input) throws IOException {
+        System.out.println("Total turns: " + turns);
         FileDealing fileDealing = new FileDealing();
         int[][] coordinates = convert(input);
+        System.out.println("Total turns: " + turns);
         String string_result;
         field = new int[max_y + 1][max_x + 1];
         int row, col, player, result;
@@ -87,8 +89,11 @@ class Solution {
             if (i % 2 == 0) player = 1;
             else player = 2;
             field[row][col] = player;
-            printFiled(field);
             result = check(player, col, row);
+            System.out.println("Result: " + result);
+
+            printFiled(field, i);
+
             string_result = decisionMaker(result, i);
             if (string_result != null) {
                 fileDealing.writeString(string_result);
@@ -101,65 +106,55 @@ class Solution {
 
     int check(int player, int col, int row) {
         int win = 5;
+        int x = col;
+        int y = row;
+        int flag = 0;
 
         // Along horizon
-        int flag = 0;
-        for (int x = col; x < max_x; x++) {
-            if (field[row][x] == player) flag++;
-            else break;
+        while (x < max_x && field[row][x] == player) {
+            flag++; x++;
         }
-        for (int x = col; x > -1; x--) {
-            if (field[row][x] == player) flag++;
-            else break;
+        x = col - 1;
+        while (x > -1 && field[row][x] == player) {
+            flag++; x--;
         }
         if (flag == win) return player;
 
         // Along vertical
-        flag = 0;
-        for (int y = row; y < max_y; y++) {
-            if (field[y][col] == player) flag++;
-            else break;
+        flag = 0; x = col; y = row;
+        while (y < max_y && field[y][col] == player) {
+            flag++; y++;
         }
-        for (int y = row; y > -1; y--) {
-            if (field[y][col] == player) flag++;
-            else break;
+        y = row - 1;
+        while (y > -1 && field[y][col] == player) {
+            flag++; x--;
         }
         if (flag == win) return player;
 
         // Along diagonal up-right
-        flag = 0;
-        int x = col;
-        int y = row;
+        flag = 0; x = col; y = row;
         while (x < max_x && y > -1 && field[y][x] == player) {
-            flag++;
-            x++;
-            y--;
+            flag++; x++; y--;
         }
-        x = col - 1;
-        y = row + 1;
+        x = col - 1; y = row + 1;
         while (x > -1 && y < max_y && field[y][x] == player) {
-            flag++;
-            x--;
-            y++;
+            flag++; x--; y++;
         }
         if (flag == win) return player;
 
         // Along diagonal up-left
-        flag = 0;
-        x = col;
-        y = row;
+        flag = 0; x = col; y = row;
         while (x > -1 && y > -1 && field[y][x] == player) {
-            flag++;
-            x--;
-            y--;
+            flag++; x--; y--;
+            System.out.println("dd=" + flag);
         }
-        x = col + 1;
-        y = row + 1;
+        x = col + 1; y = row + 1;
         while (x < max_x && y < max_y && field[y][x] == player) {
-            flag++;
-            x++;
-            y++;
+            System.out.println("xx=" + x);
+            flag++; x++; y++;
+
         }
+        System.out.println("f=" + flag);
         if (flag == win) return player;
 
         return -1;
@@ -168,25 +163,26 @@ class Solution {
     String decisionMaker(int player, int turn) {
         String string = null;
         if (player == 1) {
-            if (turn < turns - 1) {
+            if (turn < turns) {
                 string = "Inattention";
             } else {
                 string = "First";
             }
         } else if (player == 2) {
-            if (turn < turns - 1) {
+            if (turn < turns) {
                 string = "Inattention";
             } else {
                 string = "Second";
             }
         }
-        if (turn == turns - 1 && player == -1) {
+        if (turn == turns && player == -1) {
             string = "Draw";
         }
         return string;
     }
 
-    void printFiled(int[][] field) {
+    void printFiled(int[][] field, int i) {
+        System.out.println("Turn number: " + i);
         for (int[] row : field) {
             for (int el : row)
                 System.out.print(el + " | ");
@@ -202,7 +198,7 @@ public class Tour2 {
         FileDealing fileDealing = new FileDealing();
         String[] inputs = fileDealing.read(relativePath);
         Solution solution = new Solution();
-        System.out.println(Arrays.deepToString(solution.convert(inputs)));
+        //System.out.println(Arrays.deepToString(solution.convert(inputs)));
 
         int[][] field = solution.fillField(inputs);
 //        solution.printFiled(field);
