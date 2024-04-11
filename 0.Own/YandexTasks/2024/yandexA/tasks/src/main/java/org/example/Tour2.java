@@ -4,21 +4,16 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
 
 class FileDealing {
     String[] read(String file) throws IOException {
-        FileReader fr = new FileReader(file);
         StringBuilder input = new StringBuilder();
-        BufferedReader br = new BufferedReader(fr);
-        try {
+        try (var fr = new FileReader(file);
+             var br = new BufferedReader(fr)) {
             String line;
             while ((line = br.readLine()) != null) {
                 input.append(line).append("\n");
             }
-        } finally {
-            br.close();
-            fr.close();
         }
         String string = input.toString();
         return string.split("\n");
@@ -35,6 +30,7 @@ class FileDealing {
 class Solution {
     int max_x;
     int max_y;
+    int[][] field;
 
     int[][] convert(String[] input) {
         max_x = max_y = Integer.MIN_VALUE;
@@ -66,19 +62,80 @@ class Solution {
     int[][] fillField(String[] input) {
         int[][] turns = convert(input);
         int number_turns = turns.length;
-        int[][] field = new int[max_x + 1][max_y + 1];
-        int x, y;
+        field = new int[max_y + 1][max_x + 1];
+        int row, col, player, result;
         for (int i = 0; i < number_turns; i++) {
-            if (i % 2 == 0)
-                field[turns[i][0]][turns[i][1]] = 1;
-            else
-                field[turns[i][0]][turns[i][1]] = -1;
+            row = turns[i][0];
+            col = turns[i][1];
+            if (i % 2 == 0) {
+                player = 1;
+                field[row][col] = player;
+            } else {
+                player = 2;
+                field[row][col] = player;
+            }
+            printFiled(field);
+            result = check(player, col, row);
+            if (result == 1) {
+                System.out.println(1);
+            } else if (result == 2) {
+                System.out.println(2);
+            }
+
         }
         return field;
     }
 
-    String check(int[][] field, int player) {
-        for
+    int check(int player, int col, int row) {
+
+        // along horizon
+        int flag = 0;
+        for (int x = col; x < max_x; x++) {
+            if (field[row][x] == player) flag++;
+            else break;
+        }
+        for (int x = col; x > -1; x--) {
+            if (field[row][x] == player) flag++;
+            else break;
+        }
+        if (flag == 5) return player;
+
+        // along vertical
+        flag = 0;
+        for (int y = row; y < max_y; y++) {
+            if (field[y][col] == player) flag++;
+            else break;
+        }
+        for (int y = row; y > -1; y--) {
+            if (field[y][col] == player) flag++;
+            else break;
+        }
+        if (flag == 5) return player;
+
+        // along diagonal up-right
+        flag = 0; int x = col; int y = row;
+        while (x < max_x && y > -1 && field[y][x] == player) {
+            flag++; x++; y--;
+        }
+        x = col - 1; y = row + 1;
+        while (x > -1 && y < max_y && field[y][x] == player) {
+            flag++; x--; y++;
+        }
+        if (flag == 5) return player;
+
+        // along diagonal up-left
+        flag = 0; x = col; y = row;
+        while (x > -1 && y > -1 && field[y][x] == player) {
+            flag++; x--; y--;
+        }
+        x = col + 1; y = row + 1;
+        while (x < max_x && y < max_y && field[y][x] == player) {
+            flag++; x++; y++;
+        }
+        if (flag == 5) return player;
+
+        System.out.println("END CHECKING");
+        return -1;
     }
 
     void printFiled(int[][] field) {
@@ -87,6 +144,7 @@ class Solution {
                 System.out.print(el + " | ");
             System.out.println();
         }
+        System.out.println();
     }
 }
 
