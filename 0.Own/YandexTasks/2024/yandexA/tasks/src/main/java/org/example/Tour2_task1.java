@@ -4,9 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
 
-class FileDealing {
+class FileDealing_1 {
     String[] read(String file) throws IOException {
         StringBuilder input = new StringBuilder();
         try (var fr = new FileReader(file);
@@ -34,18 +33,20 @@ class FileDealing {
     }
 }
 
-class Solution {
+class Solution_task1 {
     int max_x;
     int max_y;
     int[][] field;
     int turns;
+    int[][] coordinates;
+    int win = 5;
 
     int[][] convert(String[] input) {
         int min_x, min_y, x, y;
         min_x = min_y = Integer.MAX_VALUE;
         max_x = max_y = Integer.MIN_VALUE;
         turns = input.length - 1;
-        int[][] coordinates = new int[turns][2];
+        coordinates = new int[turns][2];
         String[] row;
         for (int i = 0; i < turns; i++) {
             row = input[i + 1].split(" ");
@@ -66,19 +67,14 @@ class Solution {
         if (min_y > 0) {
             for (int i = 0; i < turns; i++)
                 coordinates[i][1] = coordinates[i][1] - min_y;
-            max_y = max_y - min_y;
+            max_y = max_y - min_y ;
         }
-        System.out.println(max_y);
-        System.out.println(max_x);
-        System.out.println(min_y);
-        System.out.println(min_x);
         return coordinates;
     }
 
-    int[][] fillField(String[] input) throws IOException {
-        System.out.println("Total turns: " + turns);
-        FileDealing fileDealing = new FileDealing();
-        int[][] coordinates = convert(input);
+    void summarize(String[] input) throws IOException {
+        convert(input);
+        FileDealing_1 fileDealing = new FileDealing_1();
         System.out.println("Total turns: " + turns);
         String string_result;
         field = new int[max_y + 1][max_x + 1];
@@ -91,9 +87,7 @@ class Solution {
             field[row][col] = player;
             result = check(player, col, row);
             System.out.println("Result: " + result);
-
             printFiled(field, i);
-
             string_result = decisionMaker(result, i);
             if (string_result != null) {
                 fileDealing.writeString(string_result);
@@ -101,17 +95,15 @@ class Solution {
                 break;
             }
         }
-        return field;
     }
 
     int check(int player, int col, int row) {
-        int win = 5;
         int x = col;
         int y = row;
         int flag = 0;
 
         // Along horizon
-        while (x < max_x && field[row][x] == player) {
+        while (x <= max_x && field[row][x] == player) {
             flag++; x++;
         }
         x = col - 1;
@@ -121,8 +113,8 @@ class Solution {
         if (flag == win) return player;
 
         // Along vertical
-        flag = 0; x = col; y = row;
-        while (y < max_y && field[y][col] == player) {
+        flag = 0; x = col;
+        while (y <= max_y && field[y][col] == player) {
             flag++; y++;
         }
         y = row - 1;
@@ -133,11 +125,11 @@ class Solution {
 
         // Along diagonal up-right
         flag = 0; x = col; y = row;
-        while (x < max_x && y > -1 && field[y][x] == player) {
+        while (x <= max_x && y > -1 && field[y][x] == player) {
             flag++; x++; y--;
         }
         x = col - 1; y = row + 1;
-        while (x > -1 && y < max_y && field[y][x] == player) {
+        while (x > -1 && y <= max_y && field[y][x] == player) {
             flag++; x--; y++;
         }
         if (flag == win) return player;
@@ -146,36 +138,33 @@ class Solution {
         flag = 0; x = col; y = row;
         while (x > -1 && y > -1 && field[y][x] == player) {
             flag++; x--; y--;
-            System.out.println("dd=" + flag);
         }
         x = col + 1; y = row + 1;
-        while (x < max_x && y < max_y && field[y][x] == player) {
-            System.out.println("xx=" + x);
+        while (x <= max_x && y <= max_y && field[y][x] == player) {
             flag++; x++; y++;
 
         }
-        System.out.println("f=" + flag);
         if (flag == win) return player;
-
         return -1;
     }
 
     String decisionMaker(int player, int turn) {
+        int turnsToNill = turns - 1;
         String string = null;
         if (player == 1) {
-            if (turn < turns) {
+            if (turn < turnsToNill) {
                 string = "Inattention";
             } else {
                 string = "First";
             }
         } else if (player == 2) {
-            if (turn < turns) {
+            if (turn < turnsToNill) {
                 string = "Inattention";
             } else {
                 string = "Second";
             }
         }
-        if (turn == turns && player == -1) {
+        if (turn == turnsToNill && player == -1) {
             string = "Draw";
         }
         return string;
@@ -190,21 +179,15 @@ class Solution {
         }
         System.out.println();
     }
+
 }
 
-public class Tour2 {
+public class Tour2_task1 {
     public static void main(String[] args) throws IOException {
-        String relativePath = "input_task1_4.txt";
-        FileDealing fileDealing = new FileDealing();
+        String relativePath = "input_task1_6.txt";
+        FileDealing_1 fileDealing = new FileDealing_1();
         String[] inputs = fileDealing.read(relativePath);
-        Solution solution = new Solution();
-        //System.out.println(Arrays.deepToString(solution.convert(inputs)));
-
-        int[][] field = solution.fillField(inputs);
-//        solution.printFiled(field);
-
-        //String[] output = {"s", "d"};
-        //fileDealing.writeArray(output);
-
+        Solution_task1 solution = new Solution_task1();
+        solution.summarize(inputs);
     }
 }
