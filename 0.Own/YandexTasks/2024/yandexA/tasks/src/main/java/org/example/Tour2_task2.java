@@ -65,11 +65,6 @@ class Solution_task2 {
         buyByDays = new int[eatDays];
         List<Integer> temp = new ArrayList<>();
         List<Integer> minPriceByDay = new ArrayList<>();
-//        if (storageDays == 1) {
-//            totalPrice = Arrays.stream(priceByDays).sum();
-//            IntStream steam = IntStream.generate(() -> 1);
-//            buyByDays = steam.limit(eatDays).toArray();
-//        }
 
         int i;
         int j = 0;
