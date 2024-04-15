@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 class FileDealing_2 {
@@ -55,9 +54,9 @@ class Solution_task2 {
                         .split(" "))
                 .mapToInt(Integer::parseInt)
                 .toArray();
-        System.out.println("eatDays = " + eatDays +
-                " storageDays = " + storageDays);
-        System.out.println("priceByDays = " + Arrays.toString(priceByDays));
+//        System.out.println("eatDays = " + eatDays +
+//                " storageDays = " + storageDays);
+//        System.out.println("priceByDays = " + Arrays.toString(priceByDays));
     }
 
     void solve(String[] input) throws IOException {
@@ -66,21 +65,20 @@ class Solution_task2 {
         List<Integer> temp = new ArrayList<>();
         List<Integer> minPriceByDay = new ArrayList<>();
 
-        int i;
-        int j = 0;
-        while (j < eatDays) {
-            i = 0;
-            while (i < storageDays && j - i > -1) {
-                temp.add(priceByDays[j - i]);
-                i++;
+        int i, j, fishs;
+        i = j = fishs = 0;
+        totalPrice = 0;
+        while (i < eatDays) {
+            j = 0;
+            while (j < storageDays && i - j > -1) {
+                temp.add(priceByDays[i -j]);
+                j++;
             }
             minPriceByDay.add(Collections.min(temp));
             temp.clear();
-            j++;
+            i++;
         }
 
-        int fishs = 0;
-        totalPrice = 0;
         for (i = 0; i < eatDays; i++) {
             j = i;
             while (j < eatDays && minPriceByDay.get(i)
@@ -94,9 +92,9 @@ class Solution_task2 {
             fishs = 0;
         }
 
-        System.out.println("totalPrice = " + totalPrice);
-        System.out.println("minPriceByDay = " + minPriceByDay);
-        System.out.println("buyByDays = " + Arrays.toString(buyByDays));
+//        System.out.println("totalPrice = " + totalPrice);
+//        System.out.println("minPriceByDay = " + minPriceByDay);
+//        System.out.println("buyByDays = " + Arrays.toString(buyByDays));
 
         FileDealing_2 fileDealing2 = new FileDealing_2();
         fileDealing2.writeTwoValues(totalPrice, buyByDays);
