@@ -4,7 +4,10 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -43,6 +46,8 @@ class Solution_task3 {
     int[][] offers;
     int numberRequests;
     int[][] requests;
+    int numberRequestsToSatisfy;
+    int[] requestsToSatisfy;
 
     void coverData(String[] input) {
         int l = 0;
@@ -77,6 +82,17 @@ class Solution_task3 {
         System.out.println("offers = " + Arrays.toString(offers));
         System.out.println("numberRequests = " + numberRequests);
         System.out.println("requests = " + Arrays.toString(requests));
+    }
+
+
+    void solve(String[] input) throws IOException {
+        coverData(input);
+        List<Integer> temp = new ArrayList<>();
+        List<Integer> minPriceByDay = new ArrayList<>();
+
+
+        FileDealing_3 fileDealing3 = new FileDealing_3();
+        fileDealing3.writeTwoValues(numberRequestsToSatisfy, requestsToSatisfy);
     }
 }
 
