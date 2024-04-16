@@ -37,41 +37,68 @@ class FileDealing_3 {
     }
 }
 
-class Node {
-    int number;
 
-    public Node(int number) {
-        this.number = number;
+class Couple {
+    int startNode = -1;
+    int endNode = -1;
+    int price = -1;
+    int time = -1;
+    int offer = -1;
+
+    public Couple(int startNode, int endNode, int price, int time, int offer) {
+        this.startNode = startNode;
+        this.endNode = endNode;
+        this.price = price;
+        this.time = time;
+        this.offer = offer;
     }
+
+    public Couple(int startNode, int endNode) {
+        this.startNode = startNode;
+        this.endNode = endNode;
+    }
+
+
+    public Couple() {
+    }
+
 }
 
-class Nodes {
-    List<Node> nodes;
-    int totalPrice = 0;
-    int totalTime = 0;
 
-    public Nodes() {
-        nodes = new ArrayList<>();
+class ArrayCouple {
+    int size;
+    Couple[][] couples;
+
+    public ArrayCouple(int size) {
+        couples = new Couple[size + 1][size + 1];
+        this.size = size;
     }
 
-    public Nodes(Node node) {
-        new Nodes();
-        nodes.add(node);
+    public void setCouple(Couple couple) {
+        couples[couple.startNode][couple.endNode] = couple;
+        couples[couple.endNode][couple.startNode] = couple;
     }
 
-    public Nodes(List<Node> nodes) {
-        new Nodes();
-        this.nodes = nodes;
+    public Couple getCouple(int startNode, int endNode) {
+        return couples[startNode][endNode];
     }
 
-    public List<Node> addNode(Node node, int price, int time) {
-        nodes.add(node);
-        totalPrice += price;
-        totalTime += time;
-        return nodes;
+}
+
+class ListCouples {
+    List<Couple> coupleList = new ArrayList<>();
+
+    public ListCouples(Couple couple) {
+        if (coupleList.isEmpty()) {
+            coupleList = new ArrayList<>();
+        } else {
+            coupleList.add(couple);
+        }
     }
 
-
+    void add(Couple couple) {
+        coupleList.add(couple);
+    }
 }
 
 class Solution_task3 {
@@ -83,35 +110,29 @@ class Solution_task3 {
     int[][] requests;
     int numberRequestsToSatisfy;
     int[] requestsToSatisfy;
-    int[][][] nodes; // [][][0] - price; [][][1] - time
+    ArrayCouple couples;
 
     void coverData(String[] input) {
         int l = 0;
         String[] line = input[l].split(" ");
         numberNodes = Integer.parseInt(line[0]);
         numberLines = Integer.parseInt(line[1]);
-        nodes = new int[numberNodes + 1][numberNodes + 1][2];
-        for (int[][] matrix : nodes) {
-            for (int[] row : matrix) {
-                Arrays.fill(row, -1);
+        couples = new ArrayCouple(numberNodes + 1);
+        for (int i = 0; i < numberNodes + 1; i++) {
+            for (int j = 0; j < numberNodes + 1; j++) {
+                couples.setCouple(new Couple(i, j));
             }
         }
         descriptionLines = new int[numberLines][3];
+        int[] temp;
         l++;
         for (int i = l; i < numberLines + l; i++) {
             line = input[i].split(" ");
-            descriptionLines[i - l] = Stream.of(line)
+            temp = Stream.of(line)
                     .mapToInt(Integer::parseInt).toArray();
-            nodes[descriptionLines[i - l][0]]
-                    [descriptionLines[i - l][1]][0] = 0;
-            nodes[descriptionLines[i - l][1]]
-                    [descriptionLines[i - l][0]][0] = 0;
-            nodes[descriptionLines[i - l][0]]
-                    [descriptionLines[i - l][1]][1]
-                    = descriptionLines[i - l][2];
-            nodes[descriptionLines[i - l][1]]
-                    [descriptionLines[i - l][0]][1]
-                    = descriptionLines[i - l][2];
+            descriptionLines[i - l] = temp;
+            couples.setCouple(new Couple(temp[0], temp[1],
+                    0, temp[2], -1));
         }
         l = l + numberLines;
         numberOffers = Integer.parseInt(input[l]);
@@ -119,21 +140,20 @@ class Solution_task3 {
         offers = new int[numberOffers][4];
         for (int i = l; i < numberOffers + l; i++) {
             line = input[i].split(" ");
-            offers[i - l] = Stream.of(line)
+            temp = Stream.of(line)
                     .mapToInt(Integer::parseInt).toArray();
-            nodes[offers[i - l][0]]
-                    [offers[i - l][1]][0] = offers[i - l][3];
-            nodes[offers[i - l][0]]
-                    [offers[i - l][1]][1] = offers[i - l][2];
-            nodes[offers[i - l][1]]
-                    [offers[i - l][0]][0] = offers[i - l][3];
-            nodes[offers[i - l][1]]
-                    [offers[i - l][0]][1] = offers[i - l][2];
+            offers[i - l] = temp;
+            couples.setCouple(new Couple(temp[0], temp[1],
+                    temp[3], temp[2], i - l + 1));
         }
         l = l + numberOffers;
         numberRequests = Integer.parseInt(input[l]);
         requests = new int[numberRequests][3];
-
+        for (int i = l; i < numberRequests + l; i++) {
+            line = input[i].split(" ");
+            requests[i - l] = Stream.of(line)
+                    .mapToInt(Integer::parseInt).toArray();
+        }
         System.out.println("numberNodes = " + numberNodes +
                 " numberLines = " + numberLines);
         System.out.println("descriptionLines = "
@@ -142,21 +162,25 @@ class Solution_task3 {
         System.out.println("offers = " + Arrays.toString(offers));
         System.out.println("numberRequests = " + numberRequests);
         System.out.println("requests = " + Arrays.toString(requests));
-        printArray(nodes);
     }
 
 
-    void calculation(Node startNode, int[] endNode) {
-        while (true){
-            Nodes tempNodesList = new Nodes();
-            tempNodesList.addNode(startNode);
+    void calculation(int[] request) {
+        int starNode = request[0];
+        int endNode = request[1];
+        int time = request[2];
+        while (true) {
+            ListCouples listCouples =
+                    new ListCouples(couples.getCouple(starNode, endNode));
         }
 
     }
 
     void solve(String[] input) throws IOException {
         coverData(input);
-
+        for (int i = 0; i < requests.length; i++) {
+            calculation(requests[i]);
+        }
 
         List<Integer> temp = new ArrayList<>();
         List<Integer> minPriceByDay = new ArrayList<>();
@@ -167,17 +191,20 @@ class Solution_task3 {
     }
 
 
-    void printArray(int[][][] nodes) {
-        System.out.println("Nodes:");
-        for (int depth = 0; depth < 2; depth++) {
-            for (int row = 0; row < numberNodes + 1; row++) {
-                for (int col = 0; col < numberNodes + 1; col++) {
-                    System.out.print(nodes[col][row][depth] + " | ");
-                }
-                System.out.println();
+    void printCouples() {
+        System.out.println("Couples/Price:");
+        for (int i = 0; i < numberNodes + 1; i++) {
+            for (int j = 0; j < numberNodes + 1; j++) {
+                System.out.print(couples.getCouple(i, j).price + " | ");
             }
             System.out.println();
-
+        }
+        System.out.println("Couples/Time:");
+        for (int i = 0; i < numberNodes + 1; i++) {
+            for (int j = 0; j < numberNodes + 1; j++) {
+                System.out.print(couples.getCouple(i, j).time + " | ");
+            }
+            System.out.println();
         }
     }
 
@@ -190,5 +217,6 @@ public class Tour2_task3 {
         String[] inputs = fileDealing.read(relativePath);
         Solution_task3 solution = new Solution_task3();
         solution.coverData(inputs);
+        solution.printCouples();
     }
 }
