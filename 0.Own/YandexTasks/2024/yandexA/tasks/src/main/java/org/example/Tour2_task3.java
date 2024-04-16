@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 class FileDealing_3 {
@@ -36,6 +37,37 @@ class FileDealing_3 {
         fw.write(string);
         fw.close();
     }
+}
+
+class Node {
+    int number;
+
+    public Node(int number) {
+        this.number = number;
+    }
+}
+
+class Nodes {
+    List<Node> nodes;
+    int totalPrice = 0;
+    int totalTime = 0;
+
+    public Nodes() {
+        nodes = new ArrayList<>();
+    }
+
+    public Nodes(List<Node> nodes) {
+        new Nodes();
+        this.nodes = nodes;
+    }
+
+    public List<Node> addNode(Node node, int price, int time) {
+        nodes.add(node);
+        totalPrice += price;
+        totalTime += time;
+        return nodes;
+    }
+
 
 }
 
@@ -48,18 +80,30 @@ class Solution_task3 {
     int[][] requests;
     int numberRequestsToSatisfy;
     int[] requestsToSatisfy;
+    int[][][] nodes; // [][][0] - price; [][][1] - time
 
     void coverData(String[] input) {
         int l = 0;
         String[] line = input[l].split(" ");
         numberNodes = Integer.parseInt(line[0]);
         numberLines = Integer.parseInt(line[1]);
+        nodes = new int[numberNodes][numberNodes][2];
+        for (int[][] two : nodes) {
+            for (int[] one : two) {
+                Arrays.fill(one, -1);
+            }
+        }
         descriptionLines = new int[numberLines][3];
         l++;
         for (int i = l; i < numberLines + l; i++) {
             line = input[i].split(" ");
             descriptionLines[i - l] = Stream.of(line)
                     .mapToInt(Integer::parseInt).toArray();
+            nodes[descriptionLines[i - l][0]]
+                    [descriptionLines[i - l][1]][0] = 0;
+            nodes[descriptionLines[i - l][0]]
+                    [descriptionLines[i - l][1]][1]
+                    = descriptionLines[i - l][2];
         }
         l = l + numberLines;
         numberOffers = Integer.parseInt(input[l]);
@@ -69,6 +113,10 @@ class Solution_task3 {
             line = input[i].split(" ");
             offers[i - l] = Stream.of(line)
                     .mapToInt(Integer::parseInt).toArray();
+            nodes[offers[i - l][0]]
+                    [offers[i - l][1]][0] = offers[i - l][3];
+            nodes[offers[i - l][0]]
+                    [offers[i - l][1]][1] = offers[i - l][2];
         }
         l = l + numberOffers;
         numberRequests = Integer.parseInt(input[l]);
@@ -87,6 +135,7 @@ class Solution_task3 {
 
     void solve(String[] input) throws IOException {
         coverData(input);
+
         List<Integer> temp = new ArrayList<>();
         List<Integer> minPriceByDay = new ArrayList<>();
 
