@@ -6,10 +6,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 class FileDealing_3 {
@@ -56,6 +54,11 @@ class Nodes {
         nodes = new ArrayList<>();
     }
 
+    public Nodes(Node node) {
+        new Nodes();
+        nodes.add(node);
+    }
+
     public Nodes(List<Node> nodes) {
         new Nodes();
         this.nodes = nodes;
@@ -87,10 +90,10 @@ class Solution_task3 {
         String[] line = input[l].split(" ");
         numberNodes = Integer.parseInt(line[0]);
         numberLines = Integer.parseInt(line[1]);
-        nodes = new int[numberNodes][numberNodes][2];
-        for (int[][] two : nodes) {
-            for (int[] one : two) {
-                Arrays.fill(one, -1);
+        nodes = new int[numberNodes + 1][numberNodes + 1][2];
+        for (int[][] matrix : nodes) {
+            for (int[] row : matrix) {
+                Arrays.fill(row, -1);
             }
         }
         descriptionLines = new int[numberLines][3];
@@ -101,8 +104,13 @@ class Solution_task3 {
                     .mapToInt(Integer::parseInt).toArray();
             nodes[descriptionLines[i - l][0]]
                     [descriptionLines[i - l][1]][0] = 0;
+            nodes[descriptionLines[i - l][1]]
+                    [descriptionLines[i - l][0]][0] = 0;
             nodes[descriptionLines[i - l][0]]
                     [descriptionLines[i - l][1]][1]
+                    = descriptionLines[i - l][2];
+            nodes[descriptionLines[i - l][1]]
+                    [descriptionLines[i - l][0]][1]
                     = descriptionLines[i - l][2];
         }
         l = l + numberLines;
@@ -117,6 +125,10 @@ class Solution_task3 {
                     [offers[i - l][1]][0] = offers[i - l][3];
             nodes[offers[i - l][0]]
                     [offers[i - l][1]][1] = offers[i - l][2];
+            nodes[offers[i - l][1]]
+                    [offers[i - l][0]][0] = offers[i - l][3];
+            nodes[offers[i - l][1]]
+                    [offers[i - l][0]][1] = offers[i - l][2];
         }
         l = l + numberOffers;
         numberRequests = Integer.parseInt(input[l]);
@@ -130,11 +142,21 @@ class Solution_task3 {
         System.out.println("offers = " + Arrays.toString(offers));
         System.out.println("numberRequests = " + numberRequests);
         System.out.println("requests = " + Arrays.toString(requests));
+        printArray(nodes);
     }
 
 
+    void calculation(Node startNode, int[] endNode) {
+        while (true){
+            Nodes tempNodesList = new Nodes();
+            tempNodesList.addNode(startNode);
+        }
+
+    }
+
     void solve(String[] input) throws IOException {
         coverData(input);
+
 
         List<Integer> temp = new ArrayList<>();
         List<Integer> minPriceByDay = new ArrayList<>();
@@ -143,6 +165,22 @@ class Solution_task3 {
         FileDealing_3 fileDealing3 = new FileDealing_3();
         fileDealing3.writeTwoValues(numberRequestsToSatisfy, requestsToSatisfy);
     }
+
+
+    void printArray(int[][][] nodes) {
+        System.out.println("Nodes:");
+        for (int depth = 0; depth < 2; depth++) {
+            for (int row = 0; row < numberNodes + 1; row++) {
+                for (int col = 0; col < numberNodes + 1; col++) {
+                    System.out.print(nodes[col][row][depth] + " | ");
+                }
+                System.out.println();
+            }
+            System.out.println();
+
+        }
+    }
+
 }
 
 public class Tour2_task3 {
