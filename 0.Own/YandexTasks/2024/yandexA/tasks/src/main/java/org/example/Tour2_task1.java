@@ -19,13 +19,6 @@ class FileDealing_1 {
         return string.split("\n");
     }
 
-    void writeArray(String[] txt) throws IOException {
-        FileWriter fw = new FileWriter("output.txt");
-        for (String s : txt)
-            fw.write(s);
-        fw.close();
-    }
-
     void writeString(String s) throws IOException {
         FileWriter fw = new FileWriter("output.txt");
         fw.write(s);
@@ -75,7 +68,7 @@ class Solution_task1 {
     void summarize(String[] input) throws IOException {
         convert(input);
         FileDealing_1 fileDealing = new FileDealing_1();
-        System.out.println("Total turns: " + turns);
+        // System.out.println("Total turns: " + turns);
         String string_result;
         field = new int[max_y + 1][max_x + 1];
         int row, col, player, result;
@@ -86,12 +79,12 @@ class Solution_task1 {
             else player = 2;
             field[row][col] = player;
             result = check(player, col, row);
-            System.out.println("Result: " + result);
-            printFiled(field, i);
+            // System.out.println("Result: " + result);
+            // printFiled(field, i);
             string_result = decisionMaker(result, i);
             if (string_result != null) {
                 fileDealing.writeString(string_result);
-                System.out.println(string_result);
+                // System.out.println(string_result);
                 break;
             }
         }
@@ -184,7 +177,7 @@ class Solution_task1 {
 
 public class Tour2_task1 {
     public static void main(String[] args) throws IOException {
-        String relativePath = "input_task1_6.txt";
+        String relativePath = "input_task1_3.txt";
         FileDealing_1 fileDealing = new FileDealing_1();
         String[] inputs = fileDealing.read(relativePath);
         Solution_task1 solution = new Solution_task1();
