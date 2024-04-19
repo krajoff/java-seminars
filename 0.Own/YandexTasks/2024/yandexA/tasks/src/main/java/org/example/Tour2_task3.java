@@ -4,9 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -24,15 +22,21 @@ class FileDealing_3 {
         return string.split("\n");
     }
 
-    void writeTwoValues(int totalPrice, int[] buyByDays) throws IOException {
+    void writeTwoValues(int numberRequestsToSatisfy, Set<Integer> set) throws IOException {
         FileWriter fw = new FileWriter("output.txt");
-        fw.write(String.valueOf(totalPrice));
-        fw.write("\n");
-        String string = Arrays
-                .stream(buyByDays)
-                .mapToObj(String::valueOf)
-                .collect(Collectors.joining(" "));
-        fw.write(string);
+        if (numberRequestsToSatisfy == 0) {
+            fw.write(String.valueOf(0));
+        } else if (set != null && numberRequestsToSatisfy != -1) {
+            fw.write(String.valueOf(numberRequestsToSatisfy));
+            fw.write("\n");
+            String string = set
+                    .stream()
+                    .map(String::valueOf)
+                    .collect(Collectors.joining(" "));
+            fw.write(string);
+        } else {
+            fw.write(String.valueOf(-1));
+        }
         fw.close();
     }
 }
@@ -58,10 +62,25 @@ class Couple {
         this.endNode = endNode;
     }
 
+    public boolean isValid() {
+        return startNode != -1 && endNode != -1 &&
+                price != -1 && time != -1;
+    }
+
 
     public Couple() {
     }
 
+    @Override
+    public String toString() {
+        return "Couple{" +
+                "startNode=" + startNode +
+                ", endNode=" + endNode +
+                ", price=" + price +
+                ", time=" + time +
+                ", offer=" + offer +
+                '}';
+    }
 }
 
 
@@ -82,22 +101,58 @@ class ArrayCouple {
     public Couple getCouple(int startNode, int endNode) {
         return couples[startNode][endNode];
     }
-
 }
 
-class ListCouples {
-    List<Couple> coupleList = new ArrayList<>();
+class ConnectionCouple {
+    List<Couple> coupleList;
+    int totalPrice = 0;
+    int totalTime = 0;
 
-    public ListCouples(Couple couple) {
-        if (coupleList.isEmpty()) {
-            coupleList = new ArrayList<>();
-        } else {
-            coupleList.add(couple);
-        }
+    public ConnectionCouple() {
+        coupleList = new ArrayList<>();
     }
 
-    void add(Couple couple) {
+    public ConnectionCouple(Couple couple) {
+        this();
         coupleList.add(couple);
+        totalTime += couple.time;
+        totalPrice += couple.price;
+    }
+
+    public ConnectionCouple(ConnectionCouple connectionCouple) {
+        coupleList = connectionCouple.coupleList;
+        totalPrice = connectionCouple.totalPrice;
+        totalTime = connectionCouple.totalTime;
+    }
+
+    public ConnectionCouple(ConnectionCouple connectionCouple, Couple couple) {
+        this(connectionCouple);
+        coupleList.add(couple);
+        totalTime += couple.time;
+        totalPrice += couple.price;
+    }
+
+
+    public boolean contain(Couple couple) {
+        for (Couple value : coupleList) {
+            if ((value.startNode == couple.startNode
+                    && value.endNode == couple.endNode) ||
+                    (value.endNode == couple.startNode
+                            && value.startNode == couple.endNode)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Couple getLastCouple() {
+        return coupleList.get(coupleList.size() - 1);
+    }
+
+    @Override
+    public String toString() {
+        return coupleList.stream().map(String::valueOf)
+                .collect(Collectors.joining("->", "{", "}"));
     }
 }
 
@@ -108,8 +163,10 @@ class Solution_task3 {
     int[][] offers;
     int numberRequests;
     int[][] requests;
-    int numberRequestsToSatisfy;
-    int[] requestsToSatisfy;
+    int numberOffersToSatisfy = 0;
+    int wholePrice;
+    int numberSatisfyRequests;
+    Set<Integer> offersToSatisfy = new HashSet<>();
     ArrayCouple couples;
 
     void coverData(String[] input) {
@@ -148,6 +205,7 @@ class Solution_task3 {
         }
         l = l + numberOffers;
         numberRequests = Integer.parseInt(input[l]);
+        l++;
         requests = new int[numberRequests][3];
         for (int i = l; i < numberRequests + l; i++) {
             line = input[i].split(" ");
@@ -156,12 +214,17 @@ class Solution_task3 {
         }
         System.out.println("numberNodes = " + numberNodes +
                 " numberLines = " + numberLines);
-        System.out.println("descriptionLines = "
-                + Arrays.toString(descriptionLines));
+        System.out.print("descriptionLines = ");
+        Arrays.stream(descriptionLines).forEach(el ->
+                System.out.println("[" + el[0] + ", " + el[1] + ", " + el[2] + "]"));
         System.out.println("numberOffers = " + numberOffers);
-        System.out.println("offers = " + Arrays.toString(offers));
+        System.out.print("offers = ");
+        Arrays.stream(offers).forEach(el ->
+                System.out.println("[" + el[0] + ", " + el[1] + ", " + el[2] + ", " + el[3] + "]"));
         System.out.println("numberRequests = " + numberRequests);
-        System.out.println("requests = " + Arrays.toString(requests));
+        System.out.print("requests = ");
+        Arrays.stream(requests).forEach(el ->
+                System.out.println("[" + el[0] + ", " + el[1] + ", " + el[2] + "]"));
     }
 
 
@@ -169,25 +232,106 @@ class Solution_task3 {
         int starNode = request[0];
         int endNode = request[1];
         int time = request[2];
-        while (true) {
-            ListCouples listCouples =
-                    new ListCouples(couples.getCouple(starNode, endNode));
+        Couple couple;
+        List<ConnectionCouple> tempConnection = new ArrayList<>();
+        for (int i = 1; i < numberNodes + 1; i++) {
+            couple = couples.getCouple(starNode, i);
+            if (couple.isValid() && couple.time <= time) {
+                System.out.println(couple);
+                var connectionCouple =
+                        new ConnectionCouple(couples.getCouple(starNode, i));
+                tempConnection.add(connectionCouple);
+            }
         }
+        System.out.println("1.Connection couples size = " + tempConnection.size());
+        System.out.println("1.List of connections = " + tempConnection);
+
+        int j = 0;
+        int count;
+        int lastCoupleLastEndNode;
+        Couple additionCouple;
+        while (j < tempConnection.size()) {
+            var con = tempConnection.get(j);
+            lastCoupleLastEndNode = con.getLastCouple().endNode;
+            count = 0;
+            for (int i = 1; i < numberNodes + 1; i++) {
+                additionCouple = couples.getCouple(lastCoupleLastEndNode, i);
+                if (lastCoupleLastEndNode != endNode && additionCouple.isValid()) {
+                    if (!con.contain(additionCouple) && (con.totalTime + additionCouple.time) <= time) {
+                        var newConnection = new ConnectionCouple(con, additionCouple);
+                        tempConnection.add(newConnection);
+                        count++;
+                    }
+                }
+            }
+            if (count > 0) {
+                tempConnection.remove(j);
+            } else {
+                j++;
+            }
+        }
+        System.out.println("2.Connection couples size = " + tempConnection.size());
+        System.out.println(tempConnection);
+
+        j = 0;
+        while (j < tempConnection.size()) {
+            var con = tempConnection.get(j);
+            lastCoupleLastEndNode = con.getLastCouple().endNode;
+            if (lastCoupleLastEndNode != endNode) {
+                tempConnection.remove(j);
+                j--;
+            }
+            j++;
+        }
+        System.out.println("3.Connection couples size = " + tempConnection.size());
+        System.out.println(tempConnection);
+
+        int price = Integer.MAX_VALUE;
+        ConnectionCouple bestCouples = null;
+        for (ConnectionCouple couples : tempConnection) {
+            if (couples.totalPrice < price) {
+                price = couples.totalPrice;
+                bestCouples = couples;
+            }
+        }
+        System.out.println("4.Best couple = " + bestCouples);
+
+        int offer;
+        if (bestCouples != null) {
+            for (int i = 0; i < bestCouples.coupleList.size(); i++) {
+                var bc = bestCouples.coupleList.get(i);
+                offer = bc.offer;
+                wholePrice += bc.price;
+                if (offer != -1)
+                    offersToSatisfy.add(offer);
+            }
+            numberSatisfyRequests++;
+        }
+        System.out.println("5.Offers = " + offersToSatisfy);
 
     }
 
     void solve(String[] input) throws IOException {
         coverData(input);
-        for (int i = 0; i < requests.length; i++) {
-            calculation(requests[i]);
+        for (int[] request : requests) {
+            System.out.println("Calculation request: " + Arrays.toString(request));
+            calculation(request);
         }
 
-        List<Integer> temp = new ArrayList<>();
-        List<Integer> minPriceByDay = new ArrayList<>();
+        numberOffersToSatisfy = offersToSatisfy.size();
+        if (numberSatisfyRequests != numberRequests) {
+            offersToSatisfy = null;
+            numberOffersToSatisfy = -1;
+        }
+        else if (wholePrice == 0) {
+            numberOffersToSatisfy = 0;
+        }
 
+        System.out.println("offersToSatisfy = " + offersToSatisfy);
+        System.out.println("numberOffersToSatisfy = " + numberOffersToSatisfy);
 
         FileDealing_3 fileDealing3 = new FileDealing_3();
-        fileDealing3.writeTwoValues(numberRequestsToSatisfy, requestsToSatisfy);
+        fileDealing3.writeTwoValues(numberOffersToSatisfy, offersToSatisfy);
     }
 
 
@@ -212,11 +356,11 @@ class Solution_task3 {
 
 public class Tour2_task3 {
     public static void main(String[] args) throws IOException {
-        String relativePath = "input_task3_2.txt";
+        String relativePath = "input_task3_4.txt";
         FileDealing_3 fileDealing = new FileDealing_3();
         String[] inputs = fileDealing.read(relativePath);
         Solution_task3 solution = new Solution_task3();
-        solution.coverData(inputs);
+        solution.solve(inputs);
         solution.printCouples();
     }
 }
