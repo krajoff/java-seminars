@@ -164,7 +164,7 @@ class Solution_task3 {
     int numberRequests;
     int[][] requests;
     int numberOffersToSatisfy = 0;
-    int wholePrice;
+    long wholePrice;
     int numberSatisfyRequests;
     Set<Integer> offersToSatisfy = new HashSet<>();
     ArrayCouple couples;
@@ -180,14 +180,14 @@ class Solution_task3 {
                 couples.setCouple(new Couple(i, j));
             }
         }
-        descriptionLines = new int[numberLines][3];
+        //descriptionLines = new int[numberLines][3];
         int[] temp;
         l++;
         for (int i = l; i < numberLines + l; i++) {
             line = input[i].split(" ");
             temp = Stream.of(line)
                     .mapToInt(Integer::parseInt).toArray();
-            descriptionLines[i - l] = temp;
+            //descriptionLines[i - l] = temp;
             couples.setCouple(new Couple(temp[0], temp[1],
                     0, temp[2], -1));
         }
@@ -212,19 +212,19 @@ class Solution_task3 {
             requests[i - l] = Stream.of(line)
                     .mapToInt(Integer::parseInt).toArray();
         }
-        System.out.println("numberNodes = " + numberNodes +
-                " numberLines = " + numberLines);
-        System.out.print("descriptionLines = ");
-        Arrays.stream(descriptionLines).forEach(el ->
-                System.out.println("[" + el[0] + ", " + el[1] + ", " + el[2] + "]"));
-        System.out.println("numberOffers = " + numberOffers);
-        System.out.print("offers = ");
-        Arrays.stream(offers).forEach(el ->
-                System.out.println("[" + el[0] + ", " + el[1] + ", " + el[2] + ", " + el[3] + "]"));
-        System.out.println("numberRequests = " + numberRequests);
-        System.out.print("requests = ");
-        Arrays.stream(requests).forEach(el ->
-                System.out.println("[" + el[0] + ", " + el[1] + ", " + el[2] + "]"));
+//        System.out.println("numberNodes = " + numberNodes +
+//                " numberLines = " + numberLines);
+        //System.out.print("descriptionLines = ");
+        //Arrays.stream(descriptionLines).forEach(el ->
+        //        System.out.println("[" + el[0] + ", " + el[1] + ", " + el[2] + "]"));
+//        System.out.println("numberOffers = " + numberOffers);
+//        System.out.print("offers = ");
+//        Arrays.stream(offers).forEach(el ->
+//                System.out.println("[" + el[0] + ", " + el[1] + ", " + el[2] + ", " + el[3] + "]"));
+//        System.out.println("numberRequests = " + numberRequests);
+//        System.out.print("requests = ");
+//        Arrays.stream(requests).forEach(el ->
+//                System.out.println("[" + el[0] + ", " + el[1] + ", " + el[2] + "]"));
     }
 
 
@@ -237,14 +237,14 @@ class Solution_task3 {
         for (int i = 1; i < numberNodes + 1; i++) {
             couple = couples.getCouple(starNode, i);
             if (couple.isValid() && couple.time <= time) {
-                System.out.println(couple);
+               // System.out.println(couple);
                 var connectionCouple =
                         new ConnectionCouple(couples.getCouple(starNode, i));
                 tempConnection.add(connectionCouple);
             }
         }
-        System.out.println("1.Connection couples size = " + tempConnection.size());
-        System.out.println("1.List of connections = " + tempConnection);
+//        System.out.println("1.Connection couples size = " + tempConnection.size());
+//        System.out.println("1.List of connections = " + tempConnection);
 
         int j = 0;
         int count;
@@ -270,8 +270,8 @@ class Solution_task3 {
                 j++;
             }
         }
-        System.out.println("2.Connection couples size = " + tempConnection.size());
-        System.out.println(tempConnection);
+//        System.out.println("2.Connection couples size = " + tempConnection.size());
+//        System.out.println(tempConnection);
 
         j = 0;
         while (j < tempConnection.size()) {
@@ -283,8 +283,8 @@ class Solution_task3 {
             }
             j++;
         }
-        System.out.println("3.Connection couples size = " + tempConnection.size());
-        System.out.println(tempConnection);
+//        System.out.println("3.Connection couples size = " + tempConnection.size());
+//        System.out.println(tempConnection);
 
         int price = Integer.MAX_VALUE;
         ConnectionCouple bestCouples = null;
@@ -294,7 +294,7 @@ class Solution_task3 {
                 bestCouples = couples;
             }
         }
-        System.out.println("4.Best couple = " + bestCouples);
+//        System.out.println("4.Best couple = " + bestCouples);
 
         int offer;
         if (bestCouples != null) {
@@ -307,14 +307,14 @@ class Solution_task3 {
             }
             numberSatisfyRequests++;
         }
-        System.out.println("5.Offers = " + offersToSatisfy);
+//        System.out.println("5.Offers = " + offersToSatisfy);
 
     }
 
     void solve(String[] input) throws IOException {
         coverData(input);
         for (int[] request : requests) {
-            System.out.println("Calculation request: " + Arrays.toString(request));
+//            System.out.println("Calculation request: " + Arrays.toString(request));
             calculation(request);
         }
 
@@ -327,8 +327,8 @@ class Solution_task3 {
             numberOffersToSatisfy = 0;
         }
 
-        System.out.println("offersToSatisfy = " + offersToSatisfy);
-        System.out.println("numberOffersToSatisfy = " + numberOffersToSatisfy);
+//        System.out.println("offersToSatisfy = " + offersToSatisfy);
+//        System.out.println("numberOffersToSatisfy = " + numberOffersToSatisfy);
 
         FileDealing_3 fileDealing3 = new FileDealing_3();
         fileDealing3.writeTwoValues(numberOffersToSatisfy, offersToSatisfy);
@@ -356,11 +356,12 @@ class Solution_task3 {
 
 public class Tour2_task3 {
     public static void main(String[] args) throws IOException {
-        String relativePath = "input_task3_4.txt";
+        //String relativePath = "input_task3_5.txt";
+        String relativePath = "input.txt";
         FileDealing_3 fileDealing = new FileDealing_3();
         String[] inputs = fileDealing.read(relativePath);
         Solution_task3 solution = new Solution_task3();
         solution.solve(inputs);
-        solution.printCouples();
+        //solution.printCouples();
     }
 }

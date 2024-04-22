@@ -4,10 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -25,7 +22,7 @@ class FileDealing_2 {
         return string.split("\n");
     }
 
-    void writeTwoValues(int totalPrice, int[] buyByDays) throws IOException {
+    void writeTwoValues(long totalPrice, int[] buyByDays) throws IOException {
         FileWriter fw = new FileWriter("output.txt");
         fw.write(String.valueOf(totalPrice));
         fw.write("\n");
@@ -42,7 +39,7 @@ class FileDealing_2 {
 class Solution_task2 {
     int eatDays, storageDays;
     int[] priceByDays;
-    int totalPrice;
+    long totalPrice;
     int[] buyByDays;
 
     void coverData(String[] input) {
@@ -62,39 +59,52 @@ class Solution_task2 {
     void solve(String[] input) throws IOException {
         coverData(input);
         buyByDays = new int[eatDays];
-        List<Integer> temp = new ArrayList<>();
-        List<Integer> minPriceByDay = new ArrayList<>();
+        int minPrice = Integer.MAX_VALUE;
+        Stack<Integer> minPriceStack = new Stack<>();
+        int j, k, fishs;
+        totalPrice = fishs = 0;
+        for (int i = 0; i < eatDays; i++) {
 
-        int i, j, fishs;
-        i = j = fishs = 0;
-        totalPrice = 0;
-        while (i < eatDays) {
+            // Return minimum price stack
             j = 0;
             while (j < storageDays && i - j > -1) {
-                temp.add(priceByDays[i -j]);
+                if (priceByDays[i - j] < minPrice) {
+                    minPrice = priceByDays[i - j];
+                }
                 j++;
             }
-            minPriceByDay.add(Collections.min(temp));
-            temp.clear();
-            i++;
-        }
+            minPriceStack.push(minPrice);
+            minPrice = Integer.MAX_VALUE;
 
-        for (i = 0; i < eatDays; i++) {
-            j = i;
-            while (j < eatDays && minPriceByDay.get(i)
-                    .equals(minPriceByDay.get(j))) {
-                fishs++;
-                j++;
+            // Return fishes
+            if (i > 0) {
+                if (minPriceStack.get(i).equals(minPriceStack.get(i - 1))) {
+                    fishs++;
+                } else {
+                    totalPrice += (long) fishs * minPriceStack.get(i - 1);
+                    buyByDays[i] = fishs;
+                    fishs = 0;
+                }
+
+//                k = i;
+//                while (k < eatDays && minPriceStack.get(i)
+//                        .equals(minPriceStack.get(k))) {
+//                    fishs++;
+//                    j++;
+//                }
+//                totalPrice += (long) fishs * minPriceStack.get(i);
+//                buyByDays[i] = fishs;
+//                i += (j - i - 1);
+//                fishs = 0;
             }
-            totalPrice += fishs * minPriceByDay.get(i);
-            buyByDays[i] = fishs;
-            i += (j - i - 1);
-            fishs = 0;
+
+
         }
 
-//        System.out.println("totalPrice = " + totalPrice);
-//        System.out.println("minPriceByDay = " + minPriceByDay);
-//        System.out.println("buyByDays = " + Arrays.toString(buyByDays));
+
+        for (int i = 0; i < eatDays; i++) {
+
+        }
 
         FileDealing_2 fileDealing2 = new FileDealing_2();
         fileDealing2.writeTwoValues(totalPrice, buyByDays);
@@ -114,6 +124,7 @@ class Solution_task2 {
 public class Tour2_task2 {
     public static void main(String[] args) throws IOException {
         String relativePath = "input_task2_2.txt";
+        //String relativePath = "input.txt";
         FileDealing_2 fileDealing = new FileDealing_2();
         String[] inputs = fileDealing.read(relativePath);
         Solution_task2 solution = new Solution_task2();

@@ -193,7 +193,7 @@ public class CrptApi {
         rateLimiter = customRateLimiter.rateLimiter;
     }
 
-    public Document createDocumentViaSignature(Object document, String signature) {
+    public synchronized Document createDocumentViaSignature(Object document, String signature) {
         String correct_signature = "secret";
         if (document instanceof Document && signature.equals(correct_signature)) {
             System.out.println("Good");

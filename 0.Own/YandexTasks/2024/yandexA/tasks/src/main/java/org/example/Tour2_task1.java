@@ -177,7 +177,8 @@ class Solution_task1 {
 
 public class Tour2_task1 {
     public static void main(String[] args) throws IOException {
-        String relativePath = "input_task1_3.txt";
+       // String relativePath = "input_task1_3.txt";
+        String relativePath = "input.txt";
         FileDealing_1 fileDealing = new FileDealing_1();
         String[] inputs = fileDealing.read(relativePath);
         Solution_task1 solution = new Solution_task1();
