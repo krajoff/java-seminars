@@ -5,8 +5,6 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Arrays;
-
 
 public class Main {
     static String document = "{\"description\": { \"participantInn\": \"string\" }, " +
@@ -25,13 +23,13 @@ public class Main {
     static String signature = "\"signature\": \"secret\"";
 
     //static String postEndPoint = "https://ismp.crpt.ru/api/v3/lk/documents/create";
-    static  String postEndPoint = "http://localhost:8000";
+    static String postEndPoint = "http://localhost:8000";
 
     public static void main(String[] args) throws IOException, InterruptedException {
-         String requestJson = "{\"document\":" + document + ", "+ signature + "}";
-       // String requestJson = json;
+        String requestJson = "{\"document\":" + document + ", " + signature + "}";
         httpPostRequest(requestJson);
     }
+
     public static void httpPostRequest(String requestJson)
             throws IOException, InterruptedException {
         var client = HttpClient.newBuilder()
