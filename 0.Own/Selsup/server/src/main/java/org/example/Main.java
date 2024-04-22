@@ -14,8 +14,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
-        CustomHandler customHandler = new CustomHandler();
-        server.createContext("/", customHandler);
+        server.createContext("/", new CustomHandler());
         crptApi = new CrptApi(timeUnit, requestLimit);
         server.setExecutor(null);
         server.start();
