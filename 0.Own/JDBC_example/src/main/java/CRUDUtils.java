@@ -5,7 +5,7 @@ import java.util.List;
 public class CRUDUtils {
 
     private static String INSERT_USER =
-            "INSERT INTO users(Login, Email, PasswordHash) VALUES (?, ?, ?)";
+            "INSERT INTO users(Login, Email, Password) VALUES (?, ?, ?)";
     private static String SELECT_ALL_USER =
             "SELECT * FROM users";
     private static String UPDATE_PASSWORD =
@@ -25,8 +25,8 @@ public class CRUDUtils {
                 int id = rs.getInt("id");
                 String login = rs.getString("Login");
                 String email = rs.getString("Email");
-                String passwordHash = rs.getString("PasswordHash");
-                users.add(new User(id, login, email, passwordHash));
+                String password = rs.getString("Password");
+                users.add(new User(id, login, email, password));
             }
         } catch (SQLException e) {
             e.printStackTrace();

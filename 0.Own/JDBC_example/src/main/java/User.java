@@ -2,15 +2,15 @@ public class User {
     private long id;
     private String login;
     private String email;
-    private String passwordHash;
+    private String password;
 
     public User(){};
 
-    public User(long id, String login, String email, String passwordHash) {
+    public User(long id, String login, String email, String password) {
         this.id = id;
         this.login = login;
         this.email = email;
-        this.passwordHash = passwordHash;
+        this.password = password;
     }
 
     public long getId() {
@@ -38,11 +38,11 @@ public class User {
     }
 
     public String getPasswordHash() {
-        return passwordHash;
+        return password;
     }
 
     public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
+        this.password = password;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class User {
                 "id=" + id +
                 ", login='" + login + '\'' +
                 ", email='" + email + '\'' +
-                ", passwordHash='" + passwordHash + '\'' +
+                ", passwordHash='" + password + '\'' +
                 '}';
     }
 }
