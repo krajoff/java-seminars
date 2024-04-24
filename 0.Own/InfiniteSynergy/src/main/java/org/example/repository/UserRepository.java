@@ -1,6 +1,7 @@
-package org.example;
+package org.example.repository;
 
-import org.example.exceptions.UserNotFoundException;
+import org.example.model.User;
+import org.example.exception.UserNotFoundException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

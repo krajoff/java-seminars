@@ -1,5 +1,7 @@
-package org.example;
+package org.example.controller;
 
+import org.example.service.UserService;
+import org.example.model.User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
