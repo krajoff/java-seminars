@@ -11,11 +11,11 @@ import java.util.List;
 
 public class CRUDUser {
     private static String INSERT_USER =
-            "INSERT INTO users(login, password) VALUES (?, ?)";
+            "INSERT INTO users(login, password, balance) VALUES (?, ?, ?)";
     private static String SELECT_ALL_USER =
             "SELECT * FROM users";
-    private static String UPDATE_PASSWORD_BY_LOGIN =
-            "UPDATE users SET password = ? WHERE login = ?";
+    private static String UPDATE_BALANCE_BY_LOGIN =
+            "UPDATE users SET balance = ? WHERE login = ?";
     private static String SELECT_USER_BY_LOGIN =
             "SELECT * FROM users WHERE login = ?";
     private static String DELETE_USER_BY_LOGIN =
@@ -40,29 +40,29 @@ public class CRUDUser {
         return users;
     }
 
-    public static User findUserById(int id) {
+    public static User findUserByLogin(String login) {
         User user = null;
         try (Connection connection = DBUtils.getConnection();
              PreparedStatement preparedStatement =
                      connection.prepareStatement(SELECT_USER_BY_LOGIN)) {
-            preparedStatement.setInt(1, id);
+            preparedStatement.setString(1, login);
             ResultSet rs = preparedStatement.executeQuery();
             rs.next();
-            String login = rs.getString("Login");
-            String email = rs.getString("Email");
-            String passwordHash = rs.getString("PasswordHash");
-            user = new User(id, login, email, passwordHash);
+            int id = rs.getInt("id");
+            String password = rs.getString("password");
+            double balance = rs.getDouble("balance");
+            user = new User(id, login, password, balance);
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return user;
     }
 
-    public static void deleteUserById(int id) {
+    public static void deleteUserByLogin(String login) {
         try (Connection connection = DBUtils.getConnection();
              PreparedStatement preparedStatement =
-                     connection.prepareStatement(DELETE_USER_BY_ID)) {
-            preparedStatement.setInt(1, id);
+                     connection.prepareStatement(DELETE_USER_BY_LOGIN)) {
+            preparedStatement.setString(1, login);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -74,19 +74,20 @@ public class CRUDUser {
              PreparedStatement preparedStatement =
                      connection.prepareStatement(INSERT_USER)) {
             preparedStatement.setString(1, user.getLogin());
-            preparedStatement.setString(3, user.getPassword());
+            preparedStatement.setString(2, user.getPassword());
+            preparedStatement.setDouble(3, user.getBalance());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public static void updatePasswordById(int id, String passwordHash) {
+    public static void updateBalanceByLogin(String login, double balance) {
         try (Connection connection = DBUtils.getConnection();
              PreparedStatement preparedStatement =
-                     connection.prepareStatement(UPDATE_PASSWORD)) {
-            preparedStatement.setString(1, passwordHash);
-            preparedStatement.setInt(2, id);
+                     connection.prepareStatement(UPDATE_BALANCE_BY_LOGIN)) {
+            preparedStatement.setDouble(1, balance);
+            preparedStatement.setString(2, login);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

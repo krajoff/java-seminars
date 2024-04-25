@@ -1,6 +1,5 @@
 package org.example.service;
 
-import org.example.model.Role;
 import org.example.model.User;
 import org.example.exception.UserNotFoundException;
 import org.example.repository.UserRepository;
@@ -55,11 +54,10 @@ public class UserServiceImpl {
     }
 
     public boolean saveUser(User user) {
-        if (userRepository.findByUsername(user.getUsername()) != null) {
+        if (userRepository.findByUsername(user.getLogin()) != null) {
             System.out.println("User already existed");
             return false;
         } else {
-            user.setRole(Role.USER);
             user.setPassword(user.getPassword());
             userRepository.save(user);
             return true;

@@ -18,5 +18,14 @@ public class User {
         this.password = password;
         this.balance = balance;
     }
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                ", balance=" + balance +
+                '}';
+    }
 }
 
