@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="c9ef704e-8c4d-41be-8272-a0d0c582b696" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../InfiniteSynergy/src/main/java/org/example/GreetServer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../vkbot/src/main/java/com/example/bot/MyBot.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../vkbot/src/main/java/com/example/bot/configuration/Configuration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../vkbot/src/main/java/com/example/bot/controller/VkCallbackController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../vkbot/src/main/java/com/example/bot/models/Event.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../vkbot/src/main/java/com/example/bot/models/Message.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../vkbot/src/main/java/com/example/bot/models/SendMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../vkbot/src/main/java/com/example/bot/models/Update.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../vkbot/src/main/java/com/example/bot/models/UpdateDeserializer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../vkbot/src/main/java/com/example/bot/server/Server.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../vkbot/src/main/java/com/example/bot/server/VkBotService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../vkbot/src/main/resources/application.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../InfiniteSynergy/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../InfiniteSynergy/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../InfiniteSynergy/src/main/java/org/example/Program.java" beforeDir="false" afterPath="$PROJECT_DIR$/../InfiniteSynergy/src/main/java/org/example/Program.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../InfiniteSynergy/src/main/java/org/example/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/../InfiniteSynergy/src/main/java/org/example/Server.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 5
+}]]></component>
+  <component name="ProjectId" id="2hAowxqu97D9CuDzPahewKnirIP" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/JAVA/java-seminars/0.Own/UnoSoft/unosoft"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c9ef704e-8c4d-41be-8272-a0d0c582b696" name="Changes" comment="" />
+      <created>1717046484887</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1717046484887</updated>
+    </task>
+    <servers />
+  </component>
+</project>
