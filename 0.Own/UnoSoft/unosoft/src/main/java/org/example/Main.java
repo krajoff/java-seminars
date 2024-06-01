@@ -13,6 +13,7 @@ public class Main {
             System.exit(1);
         }
         String inputFilePath = args[0];
+        long startTime = System.currentTimeMillis();
         //String inputFilePath = "D:\\JAVA\\java-seminars\\0.Own\\UnoSoft\\unosoft\\src\\main\\resources\\lng-4.txt";
         Set<List<Long>> set = getLinkedHashSet(inputFilePath);
         List<Set<List<Long>>> groups = getGroups(set);
@@ -20,6 +21,9 @@ public class Main {
         long groupCount = groups.stream().filter(group -> group.size() > 1).count();
         System.out.println("Groups number with more than one element: " + groupCount);
         writeOutput(groups, "output.txt");
+        long endTime = System.currentTimeMillis();
+        long executionTime = endTime - startTime;
+        System.out.println("Time execution: " + executionTime + " ms");
     }
 
     private static Set<List<Long>> getLinkedHashSet(String inputFilePath) throws IOException {
