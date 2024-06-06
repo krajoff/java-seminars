@@ -17,7 +17,7 @@ public class Main {
         long startTime = System.currentTimeMillis();
         //String inputFilePath = "D:\\JAVA\\java-seminars\\0.Own\\UnoSoft\\unosoft\\build\\libs\\lng-big.csv";
         Set<List<Double>> set = readFile(inputFilePath, Double.class);
-        List<Set<List<Double>>> groups = findAndMergeGroups(set);
+        List<Set<List<Double>>> groups = findAndMergeGroups1(set);
         sortGroups(groups);
         long groupCount = groups.stream().filter(group -> group.size() > 1).count();
         System.out.println("Groups number with more than one element: " + groupCount);
@@ -26,6 +26,47 @@ public class Main {
         long executionTime = endTime - startTime;
         System.out.println("Time execution: " + executionTime + " ms");
     }
+
+    public static <T> List<Set<List<T>>> findAndMergeGroups1(Set<List<T>> data) {
+        // Create a list of all rows
+        List<List<T>> rows = new ArrayList<>(data);
+        // Initialize Union-Find structure
+        UnionFind uf = new UnionFind(rows.size());
+        // Map to track column value to row indices
+        Map<Integer, Map<T, List<Integer>>> columnValueToIndices = new HashMap<>();
+
+        for (int rowIndex = 0; rowIndex < rows.size(); rowIndex++) {
+            List<T> row = rows.get(rowIndex);
+            for (int colIndex = 0; colIndex < row.size(); colIndex++) {
+                T value = row.get(colIndex);
+                if (value == null) continue;
+
+                columnValueToIndices.putIfAbsent(colIndex, new HashMap<>());
+                Map<T, List<Integer>> valueToIndices = columnValueToIndices.get(colIndex);
+
+                if (!valueToIndices.containsKey(value)) {
+                    valueToIndices.put(value, new ArrayList<>());
+                }
+
+                for (Integer existingRowIndex : valueToIndices.get(value)) {
+                    uf.union(rowIndex, existingRowIndex);
+                }
+
+                valueToIndices.get(value).add(rowIndex);
+            }
+        }
+
+        // Group rows by their root in Union-Find
+        Map<Integer, Set<List<T>>> rootToGroup = new HashMap<>();
+        for (int rowIndex = 0; rowIndex < rows.size(); rowIndex++) {
+            int root = uf.find(rowIndex);
+            rootToGroup.putIfAbsent(root, new HashSet<>());
+            rootToGroup.get(root).add(rows.get(rowIndex));
+        }
+
+        return new ArrayList<>(rootToGroup.values());
+    }
+
 
     public static Set<List<Double>> readFileAsDoubles(String filename) throws IOException {
         Set<List<Double>> set = new HashSet<>();
