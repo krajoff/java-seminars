@@ -9,13 +9,13 @@ import java.util.stream.Collectors;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-//        if (args.length != 1) {
-//            System.err.println("Usage: java -jar unosoft.jar <input-file.txt>");
-//            System.exit(1);
-//        }
-//        String inputFilePath = args[0];
+        if (args.length != 1) {
+            System.err.println("Usage: java -jar unosoft.jar <input-file.txt>");
+            System.exit(1);
+        }
+        String inputFilePath = args[0];
         long startTime = System.currentTimeMillis();
-        String inputFilePath = "D:\\JAVA\\java-seminars\\0.Own\\UnoSoft\\unosoft\\build\\libs\\lng-big.csv";
+        //String inputFilePath = "D:\\JAVA\\java-seminars\\0.Own\\UnoSoft\\unosoft\\build\\libs\\lng-big.csv";
         Set<List<Double>> set = readFile(inputFilePath, Double.class);
         List<Set<List<Double>>> groups = findAndMergeGroups(set);
         sortGroups(groups);
