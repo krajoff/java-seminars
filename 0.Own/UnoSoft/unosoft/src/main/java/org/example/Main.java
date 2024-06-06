@@ -28,13 +28,9 @@ public class Main {
     }
 
     public static <T> List<Set<List<T>>> findAndMergeGroups1(Set<List<T>> data) {
-        // Create a list of all rows
         List<List<T>> rows = new ArrayList<>(data);
-        // Initialize Union-Find structure
         UnionFind uf = new UnionFind(rows.size());
-        // Map to track column value to row indices
         Map<Integer, Map<T, List<Integer>>> columnValueToIndices = new HashMap<>();
-
         for (int rowIndex = 0; rowIndex < rows.size(); rowIndex++) {
             List<T> row = rows.get(rowIndex);
             for (int colIndex = 0; colIndex < row.size(); colIndex++) {
@@ -56,7 +52,6 @@ public class Main {
             }
         }
 
-        // Group rows by their root in Union-Find
         Map<Integer, Set<List<T>>> rootToGroup = new HashMap<>();
         for (int rowIndex = 0; rowIndex < rows.size(); rowIndex++) {
             int root = uf.find(rowIndex);
