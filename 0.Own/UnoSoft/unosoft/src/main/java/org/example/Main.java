@@ -4,19 +4,20 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        if (args.length != 1) {
-            System.err.println("Usage: java -jar unosoft.jar <input-file.txt>");
-            System.exit(1);
-        }
-        String inputFilePath = args[0];
+//        if (args.length != 1) {
+//            System.err.println("Usage: java -jar unosoft.jar <input-file.txt>");
+//            System.exit(1);
+//        }
+//        String inputFilePath = args[0];
         long startTime = System.currentTimeMillis();
-        //String inputFilePath = "D:\\JAVA\\java-seminars\\0.Own\\UnoSoft\\unosoft\\src\\main\\resources\\lng-4.txt";
-        Set<List<Long>> set = getLinkedHashSet(inputFilePath);
-        List<Set<List<Long>>> groups = getGroups(set);
+        String inputFilePath = "D:\\JAVA\\java-seminars\\0.Own\\UnoSoft\\unosoft\\build\\libs\\lng-big.csv";
+        Set<List<Double>> set = readFile(inputFilePath, Double.class);
+        List<Set<List<Double>>> groups = findAndMergeGroups(set);
         sortGroups(groups);
         long groupCount = groups.stream().filter(group -> group.size() > 1).count();
         System.out.println("Groups number with more than one element: " + groupCount);
@@ -26,20 +27,21 @@ public class Main {
         System.out.println("Time execution: " + executionTime + " ms");
     }
 
-    private static Set<List<Long>> getLinkedHashSet(String inputFilePath) throws IOException {
-        Set<List<Long>> set = new LinkedHashSet<>();
+    public static Set<List<Double>> readFileAsDoubles(String filename) throws IOException {
+        Set<List<Double>> set = new HashSet<>();
         String string;
         List<String> stringList;
         try (BufferedReader reader = new BufferedReader(
-                new InputStreamReader(new FileInputStream(inputFilePath)))) {
+                new InputStreamReader(new FileInputStream(filename)))) {
             while ((string = reader.readLine()) != null) {
                 stringList = Arrays.stream(string.split(";"))
-                        .map(s -> s.substring(1, s.length() - 1))
+                        .filter(Main::isValidNumberString)
+                        .map(str -> str.replace("\"", ""))
                         .toList();
                 if (stringList.stream().noneMatch(s -> s.contains("\""))) {
-                    List<Long> longList = new ArrayList<>();
+                    List<Double> longList = new ArrayList<>();
                     for (String column : stringList) {
-                        longList.add(column.isEmpty() ? null : Long.valueOf(column));
+                        longList.add(column.isEmpty() ? null : Double.valueOf(column));
                     }
                     set.add(longList);
                 }
@@ -48,51 +50,73 @@ public class Main {
         return set;
     }
 
-    private static List<Set<List<Long>>> getGroups(Set<List<Long>> data) {
-        // column, long, set
-        Map<Integer, Map<Long, Set<List<Long>>>> columnValueToGroup = new HashMap<>();
-        List<Set<List<Long>>> groups = new ArrayList<>();
-
-        for (List<Long> row : data) {
-            Set<List<Long>> matchedGroup = null;
-            for (int i = 0; i < row.size(); i++) {
-                Long value = row.get(i);
-                if (value == null) continue; // Пропускаем отсутствующие значения
-
-                columnValueToGroup.putIfAbsent(i, new HashMap<>());
-                Map<Long, Set<List<Long>>> valueToGroup = columnValueToGroup.get(i);
-
-                if (valueToGroup.containsKey(value)) {
-                    matchedGroup = valueToGroup.get(value);
-                    break;
-                }
-            }
-
-            if (matchedGroup == null) {
-                matchedGroup = new HashSet<>();
-                groups.add(matchedGroup);
-            }
-
-            matchedGroup.add(row);
-            for (int i = 0; i < row.size(); i++) {
-                Long value = row.get(i);
-                if (value == null) continue;
-                columnValueToGroup.get(i).put(value, matchedGroup);
-            }
+    public static <T extends Number> Set<List<T>> readFile(String filename, Class<T> clazz) throws IOException {
+        Set<List<Double>> doubleSet = readFileAsDoubles(filename);
+        if (clazz == Double.class) {
+            return doubleSet.stream()
+                    .map(list -> (List<T>) list)
+                    .collect(Collectors.toSet());
+        } else if (clazz == Long.class) {
+            return doubleSet.stream()
+                    .map(list -> list.stream()
+                            .map(Double::longValue)
+                            .map(clazz::cast)
+                            .collect(Collectors.toList()))
+                    .collect(Collectors.toSet());
+        } else {
+            throw new IllegalArgumentException("Unsupported class type: " + clazz);
         }
-
-        return groups;
     }
 
-    public static void sortGroups(List<Set<List<Long>>> groups) {
+    private static boolean isValidNumberString(String str) {
+        return !str.contains("\"") || (str.startsWith("\"") && str.endsWith("\""));
+    }
+
+    public static <T> List<Set<List<T>>> findAndMergeGroups(Set<List<T>> data) {
+        List<List<T>> rows = new ArrayList<>(data);
+        UnionFind uf = new UnionFind(rows.size());
+        Map<Integer, Map<T, List<Integer>>> columnValueToIndices = new HashMap<>();
+
+        for (int rowIndex = 0; rowIndex < rows.size(); rowIndex++) {
+            List<T> row = rows.get(rowIndex);
+            for (int colIndex = 0; colIndex < row.size(); colIndex++) {
+                T value = row.get(colIndex);
+                if (value == null) continue;
+
+                columnValueToIndices.putIfAbsent(colIndex, new HashMap<>());
+                Map<T, List<Integer>> valueToIndices = columnValueToIndices.get(colIndex);
+
+                if (!valueToIndices.containsKey(value)) {
+                    valueToIndices.put(value, new ArrayList<>());
+                }
+
+                for (Integer existingRowIndex : valueToIndices.get(value)) {
+                    uf.union(rowIndex, existingRowIndex);
+                }
+
+                valueToIndices.get(value).add(rowIndex);
+            }
+        }
+        // Group rows by their root in Union-Find
+        Map<Integer, Set<List<T>>> rootToGroup = new HashMap<>();
+        for (int rowIndex = 0; rowIndex < rows.size(); rowIndex++) {
+            int root = uf.find(rowIndex);
+            rootToGroup.putIfAbsent(root, new HashSet<>());
+            rootToGroup.get(root).add(rows.get(rowIndex));
+        }
+        return new ArrayList<>(rootToGroup.values());
+    }
+
+
+    public static <T> void sortGroups(List<Set<List<T>>> groups) {
         groups.sort((group1, group2) -> Integer.compare(group2.size(), group1.size()));
     }
 
-    private static void writeOutput(List<Set<List<Long>>> groups, String outputFilePath) throws IOException {
+    private static <T> void writeOutput(List<Set<List<T>>> groups, String outputFilePath) throws IOException {
         try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(outputFilePath))) {
             for (int i = 0; i < groups.size(); i++) {
                 writer.write("Группа " + (i + 1) + "\n");
-                for (List<Long> row : groups.get(i)) {
+                for (List<T> row : groups.get(i)) {
                     writer.write(row.toString()
                             .substring(1, row.toString().length() - 1) + "\n");
                 }
@@ -100,6 +124,4 @@ public class Main {
             }
         }
     }
-
-
 }
