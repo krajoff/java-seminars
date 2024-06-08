@@ -18,20 +18,10 @@ public class Program {
             if (firstLine == null || firstLine.isEmpty()) {
                 throw new IllegalArgumentException("Input file is empty.");
             }
-            boolean isDouble = determineDataType(firstLine);
-            if (isDouble) {
-                System.out.println("Type data is double");
-                Set<List<Double>> data = readFileAsDouble(reader, firstLine);
-                List<Set<List<Double>>> groups = findAndMergeGroups(data);
-                sortGroups(groups);
-                printResults(groups);
-            } else {
-                System.out.println("Type data is long");
-                Set<List<Long>> data = readFileAsLong(reader, firstLine);
-                List<Set<List<Long>>> groups = findAndMergeGroups(data);
-                sortGroups(groups);
-                printResults(groups);
-            }
+            Set<List<Double>> data = readFileAsDouble(reader, firstLine);
+            List<Set<List<Double>>> groups = findAndMergeGroups(data);
+            sortGroups(groups);
+            printResults(groups);
         } catch (IOException e) {
             e.printStackTrace();
         }
