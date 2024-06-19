@@ -63,7 +63,8 @@ public class Server {
                 var stringBuffer = new StringBuilder();
 
                 String inputLine;
-                while ((inputLine = in.readLine()) != null && !inputLine.equals("")) {
+                while ((inputLine = in.readLine()) != null
+                        && !inputLine.isEmpty()) {
                     stringBuffer.append(inputLine);
                     stringBuffer.append("\r\n");
                 }
@@ -78,7 +79,9 @@ public class Server {
                     outStream.write("HTTP/1.1 200 OK\r\n".getBytes());
                     //outStream.write("Main: OneServer 0.1\r\n".getBytes());
                     outStream.write("Content-Length: 22\r\n".getBytes()); // if text/plain the length is required
+                    outStream.write("Text: \r\n".getBytes());
                     outStream.write("Content-Type: text/plain\r\n".getBytes());
+
                     //outStream.write("Connection: close\r\n".getBytes());
 
                     // An empty line is required after the header
@@ -97,7 +100,7 @@ public class Server {
                 }
 
                 bufferedReader.close();
-                inBufferReader.close();
+                in.close();
             }
         } catch (Exception e) {
             e.printStackTrace();
