@@ -1,14 +1,22 @@
 package org.example;
 
 import org.example.handler.ClientHandler;
+import org.example.repository.TokenRepository;
 import org.example.repository.UserRepository;
+import org.example.server.TokenService;
+import org.example.server.UserService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 /**
  * Необходимо создать банковский сервер, который будет позволять манипулировать денежными средствами.
@@ -40,7 +48,7 @@ import java.sql.SQLException;
  * • Каждый запрос должен сопровождаться и авторизоваться JWT токеном
  * • Пользователь может просмотреть только свой собственный баланс.
  * • Приложение должно записывать логи о всех проделанных операциях,
- *   регистрациях новых пользователей, а также аутентификациях существующих, в отдельный файл в формате:
+ * регистрациях новых пользователей, а также аутентификациях существующих, в отдельный файл в формате:
  * <p>
  * <datetime>: <message>
  * Например:
@@ -54,21 +62,42 @@ import java.sql.SQLException;
  */
 public class BankingServer {
     private static final int PORT = 8080;
-    private final UserRepository userRepository;
     private static final Logger logger = LoggerFactory.getLogger(BankingServer.class);
 
-    public BankingServer() throws SQLException, InterruptedException {
-        this.userRepository = new UserRepository();
-    }
-
-    public static void main(String[] args) throws IOException, SQLException, InterruptedException {
-        BankingServer server = new BankingServer();
+    public static void main(String[] args) {
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
-            logger.info("Server is listening on port " + PORT);
+            Connection connection = setupDatabase();
+            UserRepository userRepository = new UserRepository(connection);
+            TokenRepository tokenRepository = new TokenRepository(connection);
+
+            TokenService tokenService = new TokenService(tokenRepository);
+            UserService userService = new UserService(userRepository, tokenService);
+
+            logger.info("Banking server is running on port " + PORT);
+
             while (true) {
                 Socket socket = serverSocket.accept();
-                new ClientHandler(socket, server.userRepository).start();
+                new ClientHandler(socket, userService, tokenService).start();
             }
+        } catch (IOException | SQLException e) {
+            logger.error("Failed to start the BankingServer: " + e.getMessage());
         }
     }
+
+    private static Connection setupDatabase() throws SQLException {
+        Properties props = new Properties();
+        try (InputStream input = UserRepository.class
+                .getClassLoader()
+                .getResourceAsStream(("application.properties"))) {
+            props.load(input);
+        } catch (IOException e) {
+            logger.error("No connection", e);
+        }
+        String url = props.getProperty("db.url");
+        String user = props.getProperty("db.username");
+        String password = props.getProperty("db.password");
+        return DriverManager.getConnection(url, user, password);
+    }
+
+
 }

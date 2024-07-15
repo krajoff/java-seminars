@@ -8,7 +8,9 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
 import org.example.models.HttpRequest;
+import org.example.repository.TokenRepository;
 import org.example.repository.UserRepository;
+import org.example.server.TokenService;
 import org.example.server.UserService;
 import org.example.util.JwtUtil;
 import org.example.util.LoggerUtil;
@@ -20,13 +22,16 @@ import org.json.JSONObject;
 public class ClientHandler extends Thread {
     private Socket socket;
     private UserService userService;
+    private TokenService tokenService;
     private static final Logger logger = LoggerFactory
             .getLogger(ClientHandler.class);
 
 
-    public ClientHandler(Socket socket, UserRepository userRepository) {
+    public ClientHandler(Socket socket, UserService userService,
+                         TokenService tokenService) {
         this.socket = socket;
-        this.userService = new UserService(userRepository);
+        this.userService = userService;
+        this.tokenService = tokenService;
     }
 
     @Override
@@ -41,6 +46,7 @@ public class ClientHandler extends Thread {
             StringBuilder body = new StringBuilder();
             String method = "";
             String path = "";
+            String token = "";
             int contentLength = 0;
 
             while ((line = in.readLine()) != null && !line.isEmpty()) {
@@ -50,9 +56,10 @@ public class ClientHandler extends Thread {
                     method = requestLineParts[0];
                     path = requestLineParts[1];
                 }
-                if (line.startsWith("Content-Length:")) {
+                if (line.startsWith("Content-Length:"))
                     contentLength = Integer.parseInt(line.split(":")[1].trim());
-                }
+                if (line.startsWith("Authorization: Bearer "))
+                    token = line.substring("Authorization: Bearer ".length()).trim();
             }
 
             if (contentLength > 0) {
@@ -62,7 +69,7 @@ public class ClientHandler extends Thread {
             }
 
             HttpRequest httpRequest = new HttpRequest(method,
-                    path.toLowerCase(), body.toString());
+                    path.toLowerCase(), body.toString(), token);
             logger.info("Request: " + httpRequest);
             handleRequest(httpRequest, out);
 
@@ -85,6 +92,8 @@ public class ClientHandler extends Thread {
             JSONObject jsonRequest = new JSONObject(httpRequest.getBody());
             String method = httpRequest.getMethod();
             String path = httpRequest.getPath();
+            String token = extractToken(httpRequest.getBody());
+            System.out.println(token);
             switch (method) {
                 case "POST":
                     switch (path) {
@@ -101,7 +110,7 @@ public class ClientHandler extends Thread {
                 case "GET":
                     switch (path) {
                         case "/money":
-                            handleSignin(jsonRequest, out);
+                            //handleBalance(token, out);
                             break;
                         case "/something":
                             break;
@@ -207,6 +216,16 @@ public class ClientHandler extends Thread {
             hexString.append(hex);
         }
         return hexString.toString();
+    }
+
+    private String extractToken(String request) {
+        String[] lines = request.split("\n");
+        for (String line : lines) {
+            if (line.startsWith("Authorization: Bearer ")) {
+                return line.substring("Authorization: Bearer ".length()).trim();
+            }
+        }
+        return null;
     }
 
 }

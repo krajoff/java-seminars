@@ -1,6 +1,7 @@
 package org.example.server;
 
 import org.example.models.User;
+import org.example.repository.TokenRepository;
 import org.example.repository.UserRepository;
 import org.example.util.JwtUtil;
 
@@ -10,12 +11,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final TokenService tokenService;
 
-    private JwtUtil jwtUtil;
-
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository,
+                       TokenService tokenService) {
         this.userRepository = userRepository;
+        this.tokenService = tokenService;
     }
 
     public User getUserByLogin(String login) throws SQLException {
@@ -29,16 +31,21 @@ public class UserService {
 
     public String authenticateUser(String login, String password) throws SQLException {
         User user = getUserByLogin(login);
-        if (user != null && user.getPassword().equals(password))
-            return JwtUtil.generateToken(login);
+        if (user != null && user.getPassword().equals(password)) {
+            String token = JwtUtil.generateToken(login);
+            tokenService.storeToken(user.getId(), token);
+            return token;
+        }
         return null;
     }
 
     public double getBalance(String login) throws SQLException {
-        try (Connection conn = userRepository.getConnection()) {
-            PreparedStatement stmt = conn.prepareStatement("SELECT balance FROM users WHERE login = ?");
-            stmt.setString(1, login);
-            ResultSet rs = stmt.executeQuery();
+        try (Connection connection = userRepository.getConnection()) {
+            String query = "SELECT balance FROM users WHERE login = ?";
+            PreparedStatement statement = connection
+                    .prepareStatement(query);
+            statement.setString(1, login);
+            ResultSet rs = statement.executeQuery();
             if (rs.next()) {
                 return rs.getDouble("balance");
             }
@@ -47,31 +54,29 @@ public class UserService {
     }
 
     public boolean transferMoney(String fromUser, String toUser, double amount) throws SQLException {
-        try (Connection conn = userRepository.getConnection()) {
-            conn.setAutoCommit(false);
-
-            PreparedStatement stmt = conn.prepareStatement("SELECT balance FROM users WHERE login = ?");
-            stmt.setString(1, fromUser);
-            ResultSet rs = stmt.executeQuery();
+        try (Connection connection = userRepository.getConnection()) {
+            connection.setAutoCommit(false);
+            String query = "SELECT balance FROM users WHERE login = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, fromUser);
+            ResultSet rs = statement.executeQuery();
 
             if (rs.next()) {
                 double balance = rs.getDouble("balance");
-
-                if (balance < amount) {
+                if (balance < amount)
                     return false;
-                }
 
-                stmt = conn.prepareStatement("UPDATE users SET balance = balance - ? WHERE login = ?");
-                stmt.setDouble(1, amount);
-                stmt.setString(2, fromUser);
-                stmt.executeUpdate();
+                statement = connection.prepareStatement("UPDATE users SET balance = balance - ? WHERE login = ?");
+                statement.setDouble(1, amount);
+                statement.setString(2, fromUser);
+                statement.executeUpdate();
 
-                stmt = conn.prepareStatement("UPDATE users SET balance = balance + ? WHERE login = ?");
-                stmt.setDouble(1, amount);
-                stmt.setString(2, toUser);
-                stmt.executeUpdate();
+                statement = connection.prepareStatement("UPDATE users SET balance = balance + ? WHERE login = ?");
+                statement.setDouble(1, amount);
+                statement.setString(2, toUser);
+                statement.executeUpdate();
 
-                conn.commit();
+                connection.commit();
                 return true;
             }
             return false;

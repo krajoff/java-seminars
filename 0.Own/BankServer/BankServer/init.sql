@@ -1,11 +1,11 @@
 CREATE SCHEMA IF NOT EXISTS banking;
-DROP TABLE IF EXISTS banking.users;
 
+DROP TABLE IF EXISTS banking.users;
 CREATE TABLE banking.users
 (
     id BIGSERIAL PRIMARY KEY,
     login VARCHAR(80) NOT NULL,
-    password VARCHAR(512) NOT NULL,
+    password VARCHAR(256) NOT NULL,
     balance DOUBLE PRECISION DEFAULT 0
 );
 
@@ -20,5 +20,5 @@ CREATE TABLE banking.tokens
     token TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     expires_at TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    FOREIGN KEY (user_id) REFERENCES banking.users (id)
 );

@@ -1,15 +1,11 @@
 package org.example.repository;
 
-import org.example.models.Transaction;
 import org.example.models.User;
 import org.example.handler.ClientHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.*;
-import java.util.Properties;
 
 public class UserRepository {
     private final Connection connection;
@@ -17,21 +13,8 @@ public class UserRepository {
     private static final Logger logger = LoggerFactory
             .getLogger(ClientHandler.class);
 
-    public UserRepository() throws SQLException {
-        Properties props = new Properties();
-        try (InputStream input = UserRepository.class
-                .getClassLoader()
-                .getResourceAsStream(("application.properties"))) {
-            props.load(input);
-        } catch (IOException e) {
-            logger.error("No connection", e);
-        }
-        String url = props.getProperty("db.url");
-        String user = props.getProperty("db.username");
-        String password = props.getProperty("db.password");
-        connection = DriverManager.getConnection(url, user, password);
-        logger.info("Connection to database is successful...");
-        initDatabase();
+    public UserRepository(Connection connection) {
+        this.connection = connection;
     }
 
     private void initDatabase() {
@@ -87,8 +70,7 @@ public class UserRepository {
                 statement.setString(2, user.getPassword());
                 statement.setDouble(3, user.getBalance());
                 statement.executeUpdate();
-                logger.info(String.format("New user %s is created.",
-                        user.getLogin()));
+                logger.info(String.format("New user %s is created.", user.getLogin()));
             }
             return user;
         } else {
@@ -97,32 +79,34 @@ public class UserRepository {
         return null;
     }
 
-    public void updateUser(User user) throws SQLException {
+    public User updateUser(User user) throws SQLException {
         User existingUser = findUserByLogin(user.getLogin());
         if (existingUser != null) {
             String query = "UPDATE banking.users SET balance = ? WHERE login = ?";
-            try (PreparedStatement stmt = connection.prepareStatement(query)) {
-                stmt.setDouble(1, user.getBalance());
-                stmt.setString(2, user.getLogin());
-                stmt.executeUpdate();
-                logger.info(String.format("User %s is updated.",
-                        user.getLogin()));
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setDouble(1, user.getBalance());
+                statement.setString(2, user.getLogin());
+                statement.executeUpdate();
+                logger.info(String.format("User %s is updated", user.getLogin()));
             }
         } else {
             logger.info("User is not exist");
+            return null;
         }
+        return user;
     }
 
-    public void saveTransaction(Transaction transaction) throws SQLException {
-        String query = "INSERT INTO transactions " +
-                "(from_user, to_user, amount, timestamp) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, transaction.getFromUser());
-            stmt.setString(2, transaction.getToUser());
-            stmt.setDouble(3, transaction.getAmount());
-            stmt.setTimestamp(4,
-                    Timestamp.valueOf(transaction.getTimestamp()));
-            stmt.executeUpdate();
+    public void deleteUser(User user) throws SQLException {
+        User existingUser = findUserByLogin(user.getLogin());
+        if (existingUser != null) {
+            String query = "DELETE FROM banking.users WHERE login = ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setString(1, user.getLogin());
+                statement.executeUpdate();
+                logger.info(String.format("User %s is deleted", user.getLogin()));
+            }
+        } else {
+            logger.info("User is not exist");
         }
     }
 
