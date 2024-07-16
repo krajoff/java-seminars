@@ -191,20 +191,15 @@ public class ClientHandler extends Thread {
 
     private void handleTransfer(HttpRequest httpRequest, PrintWriter out) throws SQLException, JSONException {
         long id = tokenService.validateToken(httpRequest.getToken());
-        JSONObject jsonRequest = new JSONObject(httpRequest.getBody());
-        Transaction transaction = Transaction.builder()
-                .fromUser(userService.getUserById(id))
-                .toUser(userService.getUserByLogin(jsonRequest.getString("to")))
-                .amount(jsonRequest.getDouble("amount"))
-                .timestamp(LocalDateTime.now())
-                .build();
-        userService.transferMoney(transaction);
-
-
-
-
-
-            sendResponse(out, 400, "Bad request. Not enough money.");
+        if (id != -1) {
+            JSONObject jsonRequest = new JSONObject(httpRequest.getBody());
+            Transaction transaction = Transaction.builder()
+                    .fromUser(userService.getUserById(id).getLogin())
+                    .toUser(jsonRequest.getString("to"))
+                    .amount(jsonRequest.getDouble("amount"))
+                    .timestamp(LocalDateTime.now())
+                    .build();
+            userService.transferMoney(transaction);
         } else {
             sendResponse(out, 400, "Bad request. Non-exist user.");
         }
