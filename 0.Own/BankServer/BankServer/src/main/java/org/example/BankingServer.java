@@ -62,7 +62,7 @@ import java.util.Properties;
  */
 public class BankingServer {
     private static final int PORT = 8080;
-    private static final Logger logger = LoggerFactory.getLogger(BankingServer.class);
+    private static final Logger logger = LoggerFactory.getLogger(BankingServer.class.getName());
 
     public static void main(String[] args) {
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {

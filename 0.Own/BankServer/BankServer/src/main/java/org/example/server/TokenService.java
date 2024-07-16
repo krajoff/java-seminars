@@ -16,7 +16,11 @@ public class TokenService {
         tokenRepository.storeToken(userId, token);
     }
 
-    public boolean validateToken(String token) throws SQLException {
+    public long validateToken(String token) throws SQLException {
         return tokenRepository.validateToken(token);
+    }
+
+    public String getValidTokenByUserId(long id) throws SQLException {
+        return tokenRepository.getValidTokenByUserId(id);
     }
 }

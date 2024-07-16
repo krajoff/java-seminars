@@ -1,9 +1,10 @@
 package org.example.server;
 
+import org.example.models.Transaction;
 import org.example.models.User;
-import org.example.repository.TokenRepository;
 import org.example.repository.UserRepository;
 import org.example.util.JwtUtil;
+import org.json.JSONObject;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -24,36 +25,58 @@ public class UserService {
         return userRepository.findUserByLogin(login);
     }
 
+    public User getUserById(long id) throws SQLException {
+        return userRepository.findUserById(id);
+    }
+
     public User registrateUser(String login, String password) throws SQLException {
-        User user = new User(login, password, 0d);
-        return userRepository.saveUser(user);
+        return (getUserByLogin(login) == null) ?
+                userRepository.saveUser(new User(login, password, 0d)) : null;
     }
 
     public String authenticateUser(String login, String password) throws SQLException {
         User user = getUserByLogin(login);
         if (user != null && user.getPassword().equals(password)) {
-            String token = JwtUtil.generateToken(login);
-            tokenService.storeToken(user.getId(), token);
+            String token = tokenService.getValidTokenByUserId(user.getId());
+            if (token == null) {
+                token = JwtUtil.generateToken(login);
+                tokenService.storeToken(user.getId(), token);
+                return token;
+            }
             return token;
         }
         return null;
     }
 
-    public double getBalance(String login) throws SQLException {
-        try (Connection connection = userRepository.getConnection()) {
-            String query = "SELECT balance FROM users WHERE login = ?";
-            PreparedStatement statement = connection
-                    .prepareStatement(query);
-            statement.setString(1, login);
-            ResultSet rs = statement.executeQuery();
-            if (rs.next()) {
-                return rs.getDouble("balance");
-            }
-            return -1;
-        }
+    public double getBalanceByLogin(String login) throws SQLException {
+        User user = getUserByLogin(login);
+        return (user != null) ? user.getBalance() : -1;
     }
 
-    public boolean transferMoney(String fromUser, String toUser, double amount) throws SQLException {
+    public double getBalanceById(long id) throws SQLException {
+        User user = getUserById(id);
+        return (user != null) ? user.getBalance() : -1;
+    }
+
+    public boolean transferMoney(Transaction transaction) throws SQLException {
+
+
+        if (getUserByLogin() != null && userPayee != null) {
+            userService.transferMoney()
+
+            double newUserSenderBalance = userSender.getBalance()
+                    - jsonRequest.getDouble("amount");
+            if (newUserSenderBalance >= 0) {
+                userSender.setBalance(newUserSenderBalance);
+                userPayee.setBalance(userPayee.getBalance() +
+                        jsonRequest.getDouble("amount"));
+
+                sendResponse(out, 200, new
+                        JSONObject().put("balance", userSender.getBalance()).toString());
+                logger.info(String.format("Balance is %f", newUserSenderBalance));
+            }
+
+
         try (Connection connection = userRepository.getConnection()) {
             connection.setAutoCommit(false);
             String query = "SELECT balance FROM users WHERE login = ?";

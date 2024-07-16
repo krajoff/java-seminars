@@ -6,8 +6,13 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import org.example.models.HttpRequest;
+import org.example.models.Transaction;
+import org.example.models.User;
 import org.example.repository.TokenRepository;
 import org.example.repository.UserRepository;
 import org.example.server.TokenService;
@@ -58,7 +63,7 @@ public class ClientHandler extends Thread {
                 }
                 if (line.startsWith("Content-Length:"))
                     contentLength = Integer.parseInt(line.split(":")[1].trim());
-                if (line.startsWith("Authorization: Bearer "))
+                if (line.startsWith("Authorization: Bearer"))
                     token = line.substring("Authorization: Bearer ".length()).trim();
             }
 
@@ -92,7 +97,7 @@ public class ClientHandler extends Thread {
             JSONObject jsonRequest = new JSONObject(httpRequest.getBody());
             String method = httpRequest.getMethod();
             String path = httpRequest.getPath();
-            String token = extractToken(httpRequest.getBody());
+            String token = httpRequest.getToken();
             System.out.println(token);
             switch (method) {
                 case "POST":
@@ -104,13 +109,14 @@ public class ClientHandler extends Thread {
                             handleSignin(jsonRequest, out);
                             break;
                         case "/money":
+                            handleTransfer(httpRequest, out);
                             break;
                     }
                     break;
                 case "GET":
                     switch (path) {
                         case "/money":
-                            //handleBalance(token, out);
+                            handleBalance(token, out);
                             break;
                         case "/something":
                             break;
@@ -118,7 +124,9 @@ public class ClientHandler extends Thread {
             }
         } catch (JSONException e) {
             logger.error("Invalid JSON format", e);
-            out.println("Invalid JSON format: " + e.getMessage());
+            // out.println("Invalid JSON format: " + e.getMessage());
+        } catch (SQLException e) {
+            logger.error("Invalid SQL", e);
         }
     }
 
@@ -127,7 +135,11 @@ public class ClientHandler extends Thread {
             String login = jsonRequest.getString("login");
             String password = jsonRequest.getString("password");
             String hashedPassword = hashPassword(password);
-            userService.registrateUser(login, hashedPassword);
+            if (userService.registrateUser(login, hashedPassword) != null)
+                sendResponse(out, 200,
+                        "User registered successfully");
+            else
+                sendResponse(out, 400, "User is already existed");
         } catch (JSONException e) {
             logger.error("Invalid JSON in signup", e);
         } catch (NoSuchAlgorithmException e) {
@@ -143,9 +155,14 @@ public class ClientHandler extends Thread {
             String password = jsonRequest.getString("password");
             String hashedPassword = hashPassword(password);
             String token = userService.authenticateUser(login, hashedPassword);
-            out.println("HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n");
-            out.println(new JSONObject().put("token", token).toString());
-            logger.info(String.format("User %s is successfully signed in", login));
+            if (token != null) {
+                sendResponse(out, 200,
+                        new JSONObject().put("token", token).toString());
+                logger.info(String.format("User %s is successfully signed in", login));
+            } else {
+                sendResponse(out, 401, "Invalid login or password");
+                logger.info(String.format("User %s is not signed in", login));
+            }
         } catch (JSONException e) {
             logger.error("Invalid JSON in signin", e);
         } catch (NoSuchAlgorithmException e) {
@@ -155,53 +172,41 @@ public class ClientHandler extends Thread {
         }
     }
 
-    private void handleTransfer(BufferedReader in, PrintWriter out) throws IOException, SQLException, JSONException {
-        String authorization = in.readLine().split(" ")[1];
-
-        String login = JwtUtil.validateToken(authorization);
-
-        if (login == null) {
-            out.println("HTTP/1.1 401 Unauthorized");
+    private void handleBalance(String token, PrintWriter out) throws SQLException {
+        long id = tokenService.validateToken(token);
+        double balance;
+        if (id != -1)
+            balance = userService.getBalanceById(id);
+        else {
+            sendResponse(out, 401, "Unauthorized");
             return;
         }
-
-        StringBuilder body = new StringBuilder();
-        String line;
-        while (!(line = in.readLine()).isEmpty()) {
-            body.append(line);
-        }
-
-        JSONObject json = new JSONObject(body.toString());
-        String to = json.getString("to");
-        double amount = json.getDouble("amount");
-
-        if (userService.transferMoney(login, to, amount)) {
-            out.println("HTTP/1.1 200 OK");
-            LoggerUtil.log(String.format("User \"%s\" sent %f$ to user \"%s\"", login, amount, to));
+        if (balance >= 0) {
+            sendResponse(out, 200, new JSONObject().put("balance", balance).toString());
+            logger.info(String.format("Balance is %f", balance));
         } else {
-            out.println("HTTP/1.1 400 Bad Request");
+            sendResponse(out, 400, "Bad request");
         }
     }
 
-    private void handleBalance(BufferedReader in, PrintWriter out) throws IOException, SQLException, JSONException {
-        String authorization = in.readLine().split(" ")[1];
+    private void handleTransfer(HttpRequest httpRequest, PrintWriter out) throws SQLException, JSONException {
+        long id = tokenService.validateToken(httpRequest.getToken());
+        JSONObject jsonRequest = new JSONObject(httpRequest.getBody());
+        Transaction transaction = Transaction.builder()
+                .fromUser(userService.getUserById(id))
+                .toUser(userService.getUserByLogin(jsonRequest.getString("to")))
+                .amount(jsonRequest.getDouble("amount"))
+                .timestamp(LocalDateTime.now())
+                .build();
+        userService.transferMoney(transaction);
 
-        String login = JwtUtil.validateToken(authorization);
 
-        if (login == null) {
-            out.println("HTTP/1.1 401 Unauthorized");
-            return;
-        }
 
-        double balance = userService.getBalance(login);
-        if (balance >= 0) {
-            out.println("HTTP/1.1 200 OK");
-            out.println("Content-Type: application/json");
-            out.println();
-            out.println(new JSONObject().put("balance", balance).toString());
-            LoggerUtil.log(String.format("User \"%s\" balance is %f$", login, balance));
+
+
+            sendResponse(out, 400, "Bad request. Not enough money.");
         } else {
-            out.println("HTTP/1.1 400 Bad Request");
+            sendResponse(out, 400, "Bad request. Non-exist user.");
         }
     }
 
@@ -218,14 +223,27 @@ public class ClientHandler extends Thread {
         return hexString.toString();
     }
 
-    private String extractToken(String request) {
-        String[] lines = request.split("\n");
-        for (String line : lines) {
-            if (line.startsWith("Authorization: Bearer ")) {
-                return line.substring("Authorization: Bearer ".length()).trim();
-            }
+    private void sendResponse(PrintWriter out, int statusCode, String responseBody) {
+        out.println("HTTP/1.1 " + statusCode + " " + getStatusMessage(statusCode));
+        out.println("Content-Type: application/json");
+        out.println("Content-Length: " + responseBody.length());
+        out.println();
+        out.println(responseBody);
+    }
+
+    private String getStatusMessage(int statusCode) {
+        switch (statusCode) {
+            case 200:
+                return "OK";
+            case 400:
+                return "Bad Request";
+            case 401:
+                return "Unauthorized";
+            case 404:
+                return "Not Found";
+            default:
+                return "";
         }
-        return null;
     }
 
 }

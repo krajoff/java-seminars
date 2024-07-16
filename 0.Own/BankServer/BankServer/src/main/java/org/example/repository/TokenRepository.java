@@ -1,6 +1,5 @@
 package org.example.repository;
 
-import lombok.Getter;
 import org.example.handler.ClientHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +30,22 @@ public class TokenRepository {
         }
     }
 
-    public boolean validateToken(String token) throws SQLException {
+    public String getValidTokenByUserId(long userId) {
+        String sql = "SELECT * FROM banking.tokens WHERE user_id = ? " +
+                "AND expires_at > ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setLong(1, userId);
+            statement.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
+            ResultSet rs = statement.executeQuery();
+            if (rs.next())
+                return rs.getString("token");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    public long validateToken(String token) throws SQLException {
         String sql = "SELECT * FROM banking.tokens WHERE token = ? " +
                 "AND expires_at > ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -39,8 +53,10 @@ public class TokenRepository {
             statement.setTimestamp(2,
                     Timestamp.valueOf(LocalDateTime.now()));
             ResultSet rs = statement.executeQuery();
-            return rs.next();
+            if (rs.next())
+                return rs.getLong("user_id");
         }
+        return -1;
     }
 
 }

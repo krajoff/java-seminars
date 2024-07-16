@@ -60,6 +60,25 @@ public class UserRepository {
         }
     }
 
+    public User findUserById(long id) throws SQLException {
+        String query = "SELECT * FROM banking.users WHERE id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setLong(1, id);
+            ResultSet rs = statement.executeQuery();
+            if (rs.next()) {
+                User user = new User();
+                user.setId(rs.getLong("id"));
+                user.setLogin(rs.getString("login"));
+                user.setPassword(rs.getString("password"));
+                user.setBalance(rs.getDouble("balance"));
+                return user;
+            } else {
+                return null;
+            }
+        }
+    }
+
+
     public User saveUser(User user) throws SQLException {
         User existingUser = findUserByLogin(user.getLogin());
         if (existingUser == null) {
