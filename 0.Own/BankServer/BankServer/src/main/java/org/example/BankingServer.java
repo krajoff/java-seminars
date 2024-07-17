@@ -3,12 +3,10 @@ package org.example;
 import org.example.handler.ClientHandler;
 import org.example.repository.TokenRepository;
 import org.example.repository.UserRepository;
-import org.example.server.TokenService;
-import org.example.server.UserService;
+import org.example.service.TokenService;
+import org.example.service.UserService;
 
 import org.example.util.LoggerUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;

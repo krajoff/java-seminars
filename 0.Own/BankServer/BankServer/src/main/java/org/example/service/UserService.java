@@ -1,4 +1,4 @@
-package org.example.server;
+package org.example.service;
 
 import org.example.models.Transaction;
 import org.example.models.User;
@@ -58,7 +58,7 @@ public class UserService {
     public void transferMoney(Transaction transaction) throws SQLException {
         User userSender = userRepository.findUserByLogin(transaction.getFromUser());
         User userPayee = userRepository.findUserByLogin(transaction.getToUser());
-        if (userSender != null && userPayee != null)
+        if (userSender != null && userPayee != null && !userSender.equals(userPayee))
             if (userSender.getBalance() - transaction.getAmount() >= 0)
                 userRepository.transaction(userSender, userPayee, transaction.getAmount());
             else

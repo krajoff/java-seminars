@@ -1,8 +1,7 @@
-package org.example.server;
+package org.example.service;
 
 import org.example.repository.TokenRepository;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
 public class TokenService {
