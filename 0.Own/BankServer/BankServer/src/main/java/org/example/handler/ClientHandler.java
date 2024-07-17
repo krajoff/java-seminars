@@ -6,21 +6,13 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 import org.example.models.HttpRequest;
 import org.example.models.Transaction;
-import org.example.models.User;
-import org.example.repository.TokenRepository;
-import org.example.repository.UserRepository;
 import org.example.server.TokenService;
 import org.example.server.UserService;
-import org.example.util.JwtUtil;
 import org.example.util.LoggerUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,8 +20,6 @@ public class ClientHandler extends Thread {
     private Socket socket;
     private UserService userService;
     private TokenService tokenService;
-    private static final Logger logger = LoggerFactory
-            .getLogger(ClientHandler.class);
 
 
     public ClientHandler(Socket socket, UserService userService,
@@ -75,11 +65,12 @@ public class ClientHandler extends Thread {
 
             HttpRequest httpRequest = new HttpRequest(method,
                     path.toLowerCase(), body.toString(), token);
-            logger.info("Request: " + httpRequest);
+            LoggerUtil.logInfo("Request method: " + httpRequest.getMethod() +
+                    " path: " + httpRequest.getPath());
             handleRequest(httpRequest, out);
 
         } catch (Exception e) {
-            logger.error("Error handling client request", e);
+            LoggerUtil.logError("Error handling client request", e);
         }
     }
 
@@ -123,10 +114,9 @@ public class ClientHandler extends Thread {
                     }
             }
         } catch (JSONException e) {
-            logger.error("Invalid JSON format", e);
-            // out.println("Invalid JSON format: " + e.getMessage());
+            LoggerUtil.logError("Invalid JSON format", e);
         } catch (SQLException e) {
-            logger.error("Invalid SQL", e);
+            LoggerUtil.logError("Invalid SQL", e);
         }
     }
 
@@ -141,11 +131,11 @@ public class ClientHandler extends Thread {
             else
                 sendResponse(out, 400, "User is already existed");
         } catch (JSONException e) {
-            logger.error("Invalid JSON in signup", e);
+            LoggerUtil.logError("Invalid JSON in signup", e);
         } catch (NoSuchAlgorithmException e) {
-            logger.error("No such algorithm in signin", e);
+            LoggerUtil.logError("No such algorithm in signin", e);
         } catch (SQLException e) {
-            logger.error("Invalid SQL in signup", e);
+            LoggerUtil.logError("Invalid SQL in signup", e);
         }
     }
 
@@ -158,17 +148,17 @@ public class ClientHandler extends Thread {
             if (token != null) {
                 sendResponse(out, 200,
                         new JSONObject().put("token", token).toString());
-                logger.info(String.format("User %s is successfully signed in", login));
+                LoggerUtil.logInfo(String.format("User %s is successfully signed in", login));
             } else {
                 sendResponse(out, 401, "Invalid login or password");
-                logger.info(String.format("User %s is not signed in", login));
+                LoggerUtil.logInfo(String.format("User %s is not signed in", login));
             }
         } catch (JSONException e) {
-            logger.error("Invalid JSON in signin", e);
+            LoggerUtil.logError("Invalid JSON in signin", e);
         } catch (NoSuchAlgorithmException e) {
-            logger.error("No such algorithm in signin", e);
+            LoggerUtil.logError("No such algorithm in signin", e);
         } catch (SQLException e) {
-            logger.error("Invalid SQL in signup", e);
+            LoggerUtil.logError("Invalid SQL in signup", e);
         }
     }
 
@@ -183,7 +173,7 @@ public class ClientHandler extends Thread {
         }
         if (balance >= 0) {
             sendResponse(out, 200, new JSONObject().put("balance", balance).toString());
-            logger.info(String.format("Balance is %f", balance));
+            LoggerUtil.logInfo(String.format("Balance is %f", balance));
         } else {
             sendResponse(out, 400, "Bad request");
         }
@@ -200,6 +190,7 @@ public class ClientHandler extends Thread {
                     .timestamp(LocalDateTime.now())
                     .build();
             userService.transferMoney(transaction);
+            handleBalance(httpRequest.getToken(), out);
         } else {
             sendResponse(out, 400, "Bad request. Non-exist user.");
         }

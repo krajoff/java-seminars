@@ -20,14 +20,13 @@
     <last-used-providers />
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files>
-      <object connection-id="bf29f4cc-3e09-4aaa-89d6-d95309cfffd6" object-ref="schemas/banking/tables/users" />
-    </open-files>
+    <open-files />
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="bf29f4cc-3e09-4aaa-89d6-d95309cfffd6" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
+    <filter-actions connection-id="bf29f4cc-3e09-4aaa-89d6-d95309cfffd6" dataset="banking.tokens" active-filter-id="" />
     <filter-actions connection-id="bf29f4cc-3e09-4aaa-89d6-d95309cfffd6" dataset="banking.users" active-filter-id="" />
   </component>
   <component name="DBNavigator.Project.ObjectQuickFilterManager">

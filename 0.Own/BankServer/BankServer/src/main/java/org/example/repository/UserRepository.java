@@ -129,6 +129,20 @@ public class UserRepository {
         }
     }
 
+    public void transaction(User fromUser, User toUser, double amount) throws SQLException {
+        String query = "UPDATE banking.users SET balance = balance - ? WHERE login = ?;" +
+                "UPDATE banking.users SET balance = balance + ? WHERE login = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setDouble(1, amount);
+            statement.setString(2, fromUser.getLogin());
+            statement.setDouble(3, amount);
+            statement.setString(4, toUser.getLogin());
+            statement.executeUpdate();
+            logger.info(String.format("User %s was sent %f to the user %s",
+                    fromUser.getLogin(), amount, toUser.getLogin()));
+        }
+    }
+
     public Connection getConnection() {
         return this.connection;
     }

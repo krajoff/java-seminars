@@ -4,11 +4,8 @@ import org.example.models.Transaction;
 import org.example.models.User;
 import org.example.repository.UserRepository;
 import org.example.util.JwtUtil;
-import org.json.JSONObject;
+import org.example.util.LoggerUtil;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserService {
@@ -58,52 +55,15 @@ public class UserService {
         return (user != null) ? user.getBalance() : -1;
     }
 
-    public boolean transferMoney(Transaction transaction) throws SQLException {
-
-
-        if (getUserByLogin() != null && userPayee != null) {
-            userService.transferMoney()
-
-            double newUserSenderBalance = userSender.getBalance()
-                    - jsonRequest.getDouble("amount");
-            if (newUserSenderBalance >= 0) {
-                userSender.setBalance(newUserSenderBalance);
-                userPayee.setBalance(userPayee.getBalance() +
-                        jsonRequest.getDouble("amount"));
-
-                sendResponse(out, 200, new
-                        JSONObject().put("balance", userSender.getBalance()).toString());
-                logger.info(String.format("Balance is %f", newUserSenderBalance));
-            }
-
-
-        try (Connection connection = userRepository.getConnection()) {
-            connection.setAutoCommit(false);
-            String query = "SELECT balance FROM users WHERE login = ?";
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, fromUser);
-            ResultSet rs = statement.executeQuery();
-
-            if (rs.next()) {
-                double balance = rs.getDouble("balance");
-                if (balance < amount)
-                    return false;
-
-                statement = connection.prepareStatement("UPDATE users SET balance = balance - ? WHERE login = ?");
-                statement.setDouble(1, amount);
-                statement.setString(2, fromUser);
-                statement.executeUpdate();
-
-                statement = connection.prepareStatement("UPDATE users SET balance = balance + ? WHERE login = ?");
-                statement.setDouble(1, amount);
-                statement.setString(2, toUser);
-                statement.executeUpdate();
-
-                connection.commit();
-                return true;
-            }
-            return false;
-        }
+    public void transferMoney(Transaction transaction) throws SQLException {
+        User userSender = userRepository.findUserByLogin(transaction.getFromUser());
+        User userPayee = userRepository.findUserByLogin(transaction.getToUser());
+        if (userSender != null && userPayee != null)
+            if (userSender.getBalance() - transaction.getAmount() >= 0)
+                userRepository.transaction(userSender, userPayee, transaction.getAmount());
+            else
+                LoggerUtil.logInfo("Not enough money");
     }
+
 }
 

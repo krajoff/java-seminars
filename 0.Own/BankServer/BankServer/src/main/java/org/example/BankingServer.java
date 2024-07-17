@@ -6,6 +6,7 @@ import org.example.repository.UserRepository;
 import org.example.server.TokenService;
 import org.example.server.UserService;
 
+import org.example.util.LoggerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,7 +63,6 @@ import java.util.Properties;
  */
 public class BankingServer {
     private static final int PORT = 8080;
-    private static final Logger logger = LoggerFactory.getLogger(BankingServer.class.getName());
 
     public static void main(String[] args) {
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
@@ -73,14 +73,14 @@ public class BankingServer {
             TokenService tokenService = new TokenService(tokenRepository);
             UserService userService = new UserService(userRepository, tokenService);
 
-            logger.info("Banking server is running on port " + PORT);
+            LoggerUtil.logInfo("Banking server is running on port " + PORT);
 
             while (true) {
                 Socket socket = serverSocket.accept();
                 new ClientHandler(socket, userService, tokenService).start();
             }
         } catch (IOException | SQLException e) {
-            logger.error("Failed to start the BankingServer: " + e.getMessage());
+            LoggerUtil.logError("Failed to start the BankingServer: ", e);
         }
     }
 
@@ -91,7 +91,7 @@ public class BankingServer {
                 .getResourceAsStream(("application.properties"))) {
             props.load(input);
         } catch (IOException e) {
-            logger.error("No connection", e);
+            LoggerUtil.logError("No connection", e);
         }
         String url = props.getProperty("db.url");
         String user = props.getProperty("db.username");
