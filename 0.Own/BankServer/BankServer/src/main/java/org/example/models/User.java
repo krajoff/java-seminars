@@ -13,7 +13,7 @@ public class User {
     private String login;
     private String password;
     private Double balance;
-    private String token;
+    private Token token;
 
     public User(String login, String password, Double balance) {
         this.login = login;
