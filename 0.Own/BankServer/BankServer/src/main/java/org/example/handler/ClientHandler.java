@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 import org.example.models.HttpRequest;
+import org.example.models.HttpStatus;
 import org.example.models.Transaction;
 import org.example.service.TokenService;
 import org.example.service.UserService;
@@ -210,27 +211,11 @@ public class ClientHandler extends Thread {
     }
 
     private void sendResponse(PrintWriter out, int statusCode, String responseBody) {
-        out.println("HTTP/1.1 " + statusCode + " " + getStatusMessage(statusCode));
+        out.println("HTTP/1.1 " + statusCode + " " + HttpStatus.getStatusMessage(statusCode));
         out.println("Content-Type: application/json");
         out.println("Content-Length: " + responseBody.length());
         out.println();
         out.println(responseBody);
     }
-
-    private String getStatusMessage(int statusCode) {
-        switch (statusCode) {
-            case 200:
-                return "OK";
-            case 400:
-                return "Bad Request";
-            case 401:
-                return "Unauthorized";
-            case 404:
-                return "Not Found";
-            default:
-                return "";
-        }
-    }
-
 }
 
