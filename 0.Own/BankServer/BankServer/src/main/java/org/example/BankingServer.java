@@ -71,7 +71,7 @@ public class BankingServer {
             TokenService tokenService = new TokenService(tokenRepository);
             UserService userService = new UserService(userRepository, tokenService);
 
-            LoggerUtil.logInfo("Banking server is running on port " + PORT);
+            LoggerUtil.logInfo(String.format("Banking server is running on port %d...",PORT));
 
             while (true) {
                 Socket socket = serverSocket.accept();

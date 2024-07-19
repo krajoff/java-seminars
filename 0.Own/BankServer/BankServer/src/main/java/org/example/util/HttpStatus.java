@@ -1,4 +1,4 @@
-package org.example.models;
+package org.example.util;
 
 public class HttpStatus {
     public static String getStatusMessage(int statusCode) {

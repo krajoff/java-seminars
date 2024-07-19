@@ -9,6 +9,7 @@ public class LoggerUtil {
 
     public static void logInfo(String message) {
         logger.info(message);
+        System.out.println(message);;
     }
 
     public static void logDebug(String message) {

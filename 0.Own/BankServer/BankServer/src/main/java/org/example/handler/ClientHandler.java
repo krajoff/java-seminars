@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 import org.example.models.HttpRequest;
-import org.example.models.HttpStatus;
+import org.example.util.HttpResponse;
 import org.example.models.Transaction;
 import org.example.service.TokenService;
 import org.example.service.UserService;
@@ -124,17 +124,16 @@ public class ClientHandler extends Thread {
     private void handleSignup(JSONObject jsonRequest, PrintWriter out) {
         try {
             String login = jsonRequest.getString("login");
-            String password = jsonRequest.getString("password");
-            String hashedPassword = hashPassword(password);
-            if (userService.registrateUser(login, hashedPassword) != null)
-                sendResponse(out, 200,
-                        "User registered successfully");
+            String password = hashPassword(jsonRequest.getString("password"));
+            if (userService.registrateUser(login, password) != null)
+                HttpResponse.send(out, 200,
+                        String.format("User %s is registered successfully", login));
             else
-                sendResponse(out, 400, "User is already existed");
+                HttpResponse.send(out, 400, "User is already existed");
         } catch (JSONException e) {
             LoggerUtil.logError("Invalid JSON in signup", e);
         } catch (NoSuchAlgorithmException e) {
-            LoggerUtil.logError("No such algorithm in signin", e);
+            LoggerUtil.logError("No such algorithm in signup", e);
         } catch (SQLException e) {
             LoggerUtil.logError("Invalid SQL in signup", e);
         }
@@ -143,15 +142,14 @@ public class ClientHandler extends Thread {
     private void handleSignin(JSONObject jsonRequest, PrintWriter out) {
         try {
             String login = jsonRequest.getString("login");
-            String password = jsonRequest.getString("password");
-            String hashedPassword = hashPassword(password);
-            String token = userService.authenticateUser(login, hashedPassword);
+            String password = hashPassword(jsonRequest.getString("password"));
+            String token = userService.authenticateUser(login, password);
             if (token != null) {
-                sendResponse(out, 200,
+                HttpResponse.send(out, 200,
                         new JSONObject().put("token", token).toString());
                 LoggerUtil.logInfo(String.format("User %s is successfully signed in", login));
             } else {
-                sendResponse(out, 401, "Invalid login or password");
+                HttpResponse.send(out, 401, "Invalid login or password");
                 LoggerUtil.logInfo(String.format("User %s is not signed in", login));
             }
         } catch (JSONException e) {
@@ -169,14 +167,15 @@ public class ClientHandler extends Thread {
         if (id != -1)
             balance = userService.getBalanceById(id);
         else {
-            sendResponse(out, 401, "Unauthorized");
+            HttpResponse.send(out, 401, "Invalid token");
             return;
         }
-        if (balance >= 0) {
-            sendResponse(out, 200, new JSONObject().put("balance", balance).toString());
+        if (balance != -1) {
+            HttpResponse.send(out, 200,
+                    new JSONObject().put("balance", balance).toString());
             LoggerUtil.logInfo(String.format("Balance is %f", balance));
         } else {
-            sendResponse(out, 400, "Bad request");
+            HttpResponse.send(out, 400, "Bad request");
         }
     }
 
@@ -193,7 +192,7 @@ public class ClientHandler extends Thread {
             userService.transferMoney(transaction);
             handleBalance(httpRequest.getToken(), out);
         } else {
-            sendResponse(out, 400, "Bad request. Non-exist user.");
+            HttpResponse.send(out, 400, "Bad request. Non-exist user.");
         }
     }
 
@@ -210,12 +209,5 @@ public class ClientHandler extends Thread {
         return hexString.toString();
     }
 
-    private void sendResponse(PrintWriter out, int statusCode, String responseBody) {
-        out.println("HTTP/1.1 " + statusCode + " " + HttpStatus.getStatusMessage(statusCode));
-        out.println("Content-Type: application/json");
-        out.println("Content-Length: " + responseBody.length());
-        out.println();
-        out.println(responseBody);
-    }
 }
 

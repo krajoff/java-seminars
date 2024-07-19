@@ -1,4 +1,4 @@
-package org.example.models;
+package org.example.util;
 
 import java.io.PrintWriter;
 import java.time.ZonedDateTime;
@@ -21,14 +21,12 @@ public class HttpResponse {
         out.println("HTTP/1.1 " + statusCode + " "
                 + HttpStatus.getStatusMessage(statusCode));
 
-        headers.entrySet()
-                .stream()
-                .map(header -> header.getKey() + " " + header.getValue())
-                .forEach(out::println);
+        for (Map.Entry<String, String> header : headers.entrySet()) {
+            out.println(header.getKey() + ": " + header.getValue());
+        }
 
         out.println();
         out.println(responseBody);
         out.flush();
     }
-
 }
