@@ -1,17 +1,33 @@
+version: '3.8'
+
 services:
   postgres:
     image: postgres:13.2-alpine
     restart: always
     environment:
-      POSTGRES_DB: transactions
+      POSTGRES_DB: tr
       POSTGRES_USER: root
       POSTGRES_PASSWORD: password
     ports:
-      - 5432:5432
+      - "5432:5432"
+    networks:
+      - spring-postgres-network
+
   spring:
     build:
+      context: ../
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
     depends_on:
       - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/tr
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
+    networks:
+      - spring-postgres-network
+
+networks:
+  spring-postgres-network:
+    driver: bridge
