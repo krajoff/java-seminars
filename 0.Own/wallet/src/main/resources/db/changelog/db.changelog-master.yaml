@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - logicalFilePath: db/changelog/db.changelog.yaml
+  - changeSet:
+      id: 1
+      author: username
+      changes:
+        - createTable:
+            tableName: wallets
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: balance
+                  type: DOUBLE PRECISION
