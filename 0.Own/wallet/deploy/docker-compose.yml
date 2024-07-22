@@ -10,8 +10,6 @@ services:
       POSTGRES_PASSWORD: password
     ports:
       - "5432:5432"
-    networks:
-      - spring-postgres-network
 
   spring:
     build:
@@ -25,9 +23,4 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/tr
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: password
-    networks:
-      - spring-postgres-network
-
-networks:
-  spring-postgres-network:
-    driver: bridge
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
