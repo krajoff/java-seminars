@@ -1,5 +1,7 @@
 package javacode.wallet.services;
 
+import javacode.wallet.models.Operation;
+import javacode.wallet.models.TypeOperation;
 import javacode.wallet.models.Wallet;
 import javacode.wallet.repositories.WalletRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +22,8 @@ public class WalletServiceImp implements WalletService {
     }
 
     @Override
-    public Wallet findByUuid(UUID uuid) {
-        return walletRepository.findById(uuid)
+    public Wallet findByUuid(UUID id) {
+        return walletRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Wallet not found"));
     }
 
@@ -31,14 +33,31 @@ public class WalletServiceImp implements WalletService {
     }
 
     @Override
-    public Wallet update(UUID uuid, Wallet wallet) {
-        Wallet existingWallet = findByUuid(uuid);
+    public Wallet operate(Operation operation) {
+        Wallet wallet = findByUuid(operation.getWalletId());
+        Double amount = operation.getAmount();
+        if (wallet != null && amount > 0) {
+            if (operation.getTypeOperation().equals(TypeOperation.DEPOSIT)) {
+                wallet.setBalance(wallet.getBalance() + amount);
+                return update(wallet.getId(), wallet);
+            }
+            if (operation.getTypeOperation().equals(TypeOperation.WITHDRAW) &&
+                    wallet.getBalance() - amount > 0) {
+                wallet.setBalance(wallet.getBalance() - amount);
+                return update(wallet.getId(), wallet);
+            } else throw new RuntimeException("Not enough money");
+        } else throw new RuntimeException("Wrong operation");
+    }
+
+    @Override
+    public Wallet update(UUID id, Wallet wallet) {
+        Wallet existingWallet = findByUuid(id);
         existingWallet.setBalance(wallet.getBalance());
         return walletRepository.save(existingWallet);
     }
 
     @Override
-    public void deleteById(UUID uuid) {
-        walletRepository.deleteById(uuid);
+    public void deleteById(UUID id) {
+        walletRepository.deleteById(id);
     }
 }
