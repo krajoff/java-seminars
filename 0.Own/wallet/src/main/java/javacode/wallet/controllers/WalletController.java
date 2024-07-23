@@ -35,11 +35,11 @@ public class WalletController {
     @PostMapping
     public ResponseEntity<?> operation(@RequestBody Operation operation) {
         try {
-            walletService.operate(operation);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(walletService.operate(operation),
+                    HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(
-                    new Error(400, "Wrong request"),
+                    new Error(400, e.getMessage()),
                     HttpStatus.BAD_REQUEST);
         }
     }

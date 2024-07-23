@@ -45,7 +45,7 @@ public class WalletServiceImp implements WalletService {
                     wallet.getBalance() - amount > 0) {
                 wallet.setBalance(wallet.getBalance() - amount);
                 return update(wallet.getId(), wallet);
-            } else throw new RuntimeException("Not enough money");
+            } else throw new RuntimeException("Not enough money for withdraw");
         } else throw new RuntimeException("Wrong operation");
     }
 
