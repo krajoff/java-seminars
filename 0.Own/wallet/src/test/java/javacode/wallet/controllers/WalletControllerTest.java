@@ -7,6 +7,7 @@ import javacode.wallet.models.Wallet;
 import javacode.wallet.services.WalletService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -78,5 +79,29 @@ public class WalletControllerTest {
                 .andExpect(jsonPath("$.statusCode").value(404))
                 .andExpect(jsonPath("$.message").value("Wallet not found"));
     }
+
+    @Test
+    public void testOperation_Success() throws Exception {
+        mockMvc.perform(post("/api/v1/wallet")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(operation)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testOperation_BadRequest() throws Exception {
+        Operation operation = new Operation(null, null, 0.0);
+        Mockito.doThrow(new RuntimeException("Wrong request"))
+                .when(walletService).operate(Mockito.any(Operation.class));
+
+        mockMvc.perform(post("/api/v1/wallet")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(operation)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.statusCode").value(400))
+                .andExpect(jsonPath("$.message").value("Wrong request"));
+    }
+
 
 }
