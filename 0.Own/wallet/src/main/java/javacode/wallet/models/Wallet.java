@@ -20,7 +20,7 @@ public class Wallet {
     @UuidGenerator
     private UUID id;
 
-    @Column(name = "balance")
+    @Column(name = "balance", nullable = false)
     private Double balance;
 
 }

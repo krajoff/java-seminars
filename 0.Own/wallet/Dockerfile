@@ -1,4 +1,4 @@
-FROM postgres:13.2-alpine
-ENV POSTGRES_DB tr
-ENV POSTGRES_USER root
-ENV POSTGRES_PASSWORD password
+FROM openjdk:17-jdk-alpine
+ARG JAR_FILE=./build/libs/wallet-0.0.1-SNAPSHOT.jar
+COPY ${JAR_FILE} app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]
