@@ -43,13 +43,13 @@ public class MissingNumberFinder {
         int[] input2 = {7, 9, 10, 11, 12};
         assert findMissingNumber(input2) == 8 : "Тест 2 провален";
 
-        int[] input3 = {0};
-        assert findMissingNumber(input3) == 1 : "Тест 3 провален";
+        int[] input3 = {2};
+        assert findMissingNumber(input3) == -1 : "Тест 3 провален";
 
         int[] input4 = {4, 5, 6, 7};
         assert findMissingNumber(input4) == 8 : "Тест 4 провален";
 
         int[] input5 = {10, 12, 13, 11, 15};
-        assert findMissingNumber(input5) == 1000 : "Тест 5 провален";
+        assert findMissingNumber(input5) == 14 : "Тест 5 провален";
     }
 }

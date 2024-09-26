@@ -7,11 +7,11 @@ import javacode.wallet.models.Wallet;
 import javacode.wallet.services.WalletService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -28,7 +28,7 @@ public class WalletControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @Mock
     private WalletService walletService;
 
     @Autowired
@@ -54,7 +54,7 @@ public class WalletControllerTest {
     }
 
     @Test
-    public void testGetById_Success() throws Exception {
+    public void getById_Success() throws Exception {
         given(walletService.findByUuid(walletId)).willReturn(wallet);
 
         mockMvc.perform(get("/api/v1/wallet/{walletId}", walletId))
@@ -65,7 +65,7 @@ public class WalletControllerTest {
     }
 
     @Test
-    public void testGetById_NotFound() throws Exception {
+    public void getById_NotFound() throws Exception {
         UUID walletId = UUID.randomUUID();
         given(walletService.findByUuid(walletId))
                 .willThrow(new RuntimeException("Wallet not found"));
@@ -78,7 +78,7 @@ public class WalletControllerTest {
     }
 
     @Test
-    public void testOperation_Success() throws Exception {
+    public void operation_Success() throws Exception {
         mockMvc.perform(post("/api/v1/wallet")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(operation)))
@@ -86,7 +86,7 @@ public class WalletControllerTest {
     }
 
     @Test
-    public void testOperation_BadRequest() throws Exception {
+    public void operation_BadRequest() throws Exception {
         Operation operation = new Operation(null, null, 0.0);
         Mockito.doThrow(new RuntimeException("Wrong request"))
                 .when(walletService).operate(Mockito.any(Operation.class));
