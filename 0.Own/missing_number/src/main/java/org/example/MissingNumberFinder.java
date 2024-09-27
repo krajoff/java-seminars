@@ -1,7 +1,8 @@
 package org.example;
 /**
+ * Task:
  * Write a function as described below and test scenarios to test its validity.
- * Details
+ * Details:
  * Write a function that finds missing number in array:
  * Given array of sequent numbers 0,1,2,3...N with missing member
  * Function finds a first missing number occurrence in the sequence.
@@ -15,10 +16,7 @@ package org.example;
  * Note:
  * Think of every possible scenario to test your function including corner cases.
  * Solutions in email will not be accepted.
- */
 
-
-/**
  * Класс {@code MissingNumberFinder} предоставляет метод для поиска первого пропущенного числа
  * в последовательности целых положительных чисел. Предполагается, что последовательность состоит
  * из последовательных чисел, начинающихся с любого числа. Данное решение находит пропущенное число
